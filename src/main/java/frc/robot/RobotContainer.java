@@ -40,6 +40,8 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   // Subsystems defined here...
   private final DriveSubsystem driveSubsystem;
+  private final ShooterInSubsystem shooterInSubsystem;
+  private final ShooterOutSubsystem ShooterOutSubsystem;
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
@@ -56,6 +58,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
     driveSubsystem = new DriveSubsystem();
+    shooterInSubsystem = new ShooterInSubsystem();
+    ShooterOutSubsystem = new ShooterOutSubsystem();
 
     // Configure the trigger bindings
     configureBindings();
@@ -65,6 +69,12 @@ public class RobotContainer {
       driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
       driverXboxController::getLeftStickButton));
 
+    SmartDashboard.putData("Shooter In Forward",shooterInSubsystem.Forward());
+    SmartDashboard.putData("Shooter In Halt", shooterInSubsystem.Halt());
+    SmartDashboard.putData("Shooter In Reversed", shooterInSubsystem.Reversed());
+    SmartDashboard.putData("Shooter Out Forward", ShooterOutSubsystem.Forward());
+    SmartDashboard.putData("Shooter Out Halt", ShooterOutSubsystem.Halt());
+    SmartDashboard.putData("Shooter Out Reversed", ShooterOutSubsystem.Reversed());
   }
 
   /**
