@@ -133,5 +133,28 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
+  public static final class IntakeConstants {
+    public static final boolean kWheelTargetVelocityFromDashboard = true;
+    public static final double kIntakeWheelMaxOutRange = 0.8;
+    public static final double kIntakeWheelMinOutRange = -0.8;
+  }
+
+  public static class MotorSpeedConstants {
+    public static final double CRAWL_FORWARD = 0.01;
+    public static final double WALK_FORWARD = 0.02;
+    public static final double RUN_FORWARD = 0.03;
+    public static final double CRAWL_BACKWARD = -0.01;
+    public static final double WALK_BACKWARD = -0.02;
+    public static final double RUN_BACKWARD = -0.03;
+
+    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
+  }
+  public enum motorState {
+    UNKNOWN,
+    RUNNING,
+    STOPPED;
+  }
+
 }
 
