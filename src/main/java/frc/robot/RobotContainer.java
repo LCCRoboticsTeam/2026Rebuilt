@@ -83,10 +83,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.Forward());
     NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
     NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
-    NamedCommands.registerCommand("ClimberUp", new MoveClimberUpCommand(climberSubsystem));
-    NamedCommands.registerCommand("ClimberDown", new MoveClimberDownCommand(climberSubsystem));
+    NamedCommands.registerCommand("ClimbUp", new MoveClimberUpCommand(climberSubsystem));
+    NamedCommands.registerCommand("ClimbDown", new MoveClimberDownCommand(climberSubsystem));
 
     //   These are class-based commands
+    NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
+    NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
     NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOut"), 
                                                                                  new WaitCommand(1.0), 
@@ -142,15 +144,16 @@ public class RobotContainer {
 
     // DRIVER XBOX Controller
     //   Note: Right stick and Left stick already mapped via SwerveGamepadDriveCommand() in earlier code
-    // 2025 REEFSCAPE 
-    // driverCommandXboxController.y().onTrue(NamedCommands.getCommand("ElevatorUp"));
-
+    driverCommandXboxController.rightBumper().whileTrue(NamedCommands.getCommand("SwerveSlideRight"));
+    driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
-    manipulatorCommandXboxController.y().onTrue(NamedCommands.getCommand("StartShooter"));
-    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("StopShooter"));
-    manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimberUp"));
-    manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimberDown"));
+    manipulatorCommandXboxController.y().onTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+    manipulatorCommandXboxController.a().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
+    manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
+    manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
 
   }
 
