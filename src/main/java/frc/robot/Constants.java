@@ -135,7 +135,7 @@ public final class Constants {
 
 // -------------------- CLIMBER --------------------
   public final class ClimberConstants {
-    public static final int kClimberCanID = 19;
+    public static final int kClimberCanID = 8;
     public static final int kClimberPositionUp = 68; // 68 is the absolute max
     public static final int kClimberPositionDown = -2; // -2 is the absolute lowest 
 
@@ -158,21 +158,21 @@ public final class Constants {
   // -------------------- SHOOTER --------------------
 
   public static final class ShooterConstants {
-    public static final boolean kMotorTargetVelocityFromDashboard = true;
+    public static final boolean kMotorTargetVelocityFromDashboard = false;
     public static final boolean kShooterCommandsFromDashboard = true;
     public static final int kShooterInCanID = 3;
     public static final int kShooterOutCanID = 4;
 
     public static final double kMotorInMaxOutRange = 0.8;
     public static final double kMotorInMinOutRange = -0.8;
-    public static final double kInForward = 800;
-    public static final double kInReversed = -800;
+    public static final double kInForward = -3600;
+    public static final double kInReversed = 900;
 
     public static final double kMotorOutMaxOutRange = 0.8;
     public static final double kMotorOutMinOutRange = -0.8; 
-    public static final double kOutForward = 800;
-    public static final double kOutReversed = -800;
-  }
+    public static final double kOutForward = 2700;
+    public static final double kOutReversed = -900;
+  } 
 
   // ---------------------------------------------
 
@@ -181,11 +181,11 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final boolean kWheelTargetVelocityFromDashboard = true;
     public static final boolean kIntakeCommandsFromDashboard = true;
-    public static final int kShooterInCanID = 20;
+    public static final int kShooterInCanID = 5;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
-    public static final double kIntakeInTargetVelocity = 100;
-    public static final double kIntakeOutTargetVelocity = -100;
+    public static final double kIntakeInTargetVelocity = 900;
+    public static final double kIntakeOutTargetVelocity = -900;
   }
   // ---------------------------------------------
 

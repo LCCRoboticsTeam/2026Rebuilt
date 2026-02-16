@@ -41,7 +41,7 @@ public class RobotContainer {
   // Subsystems defined here...
   private final DriveSubsystem driveSubsystem;
   private final IntakeWheelsSubsystem intakeWheelsSubsystem;
-  private final ArmSubsystem armSubsystem;
+  //private final ArmSubsystem armSubsystem;
   private final ShooterInSubsystem shooterInSubsystem;
   private final ShooterOutSubsystem shooterOutSubsystem;
   private final ClimberSubsystem climberSubsystem;
@@ -60,7 +60,7 @@ public class RobotContainer {
   public RobotContainer(BooleanSupplier isRobotEnabled) {
     driveSubsystem = new DriveSubsystem();
     intakeWheelsSubsystem = new IntakeWheelsSubsystem();
-    armSubsystem = new ArmSubsystem();
+    //armSubsystem = new ArmSubsystem();
     shooterInSubsystem = new ShooterInSubsystem();
     shooterOutSubsystem = new ShooterOutSubsystem();
     climberSubsystem = new ClimberSubsystem();
@@ -74,9 +74,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeIn", intakeWheelsSubsystem.IntakeWheelsInCommand());
     NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
     NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
-    NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
-    NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
-    NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
+    //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
+    //NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
+    //NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
@@ -89,9 +89,9 @@ public class RobotContainer {
     //   These are class-based commands
     NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
-    NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
-    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOut"), 
-                                                                                 new WaitCommand(1.0), 
+    //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
+    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
+                                                                                 new WaitCommand(1.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
                                                                                  new WaitCommand(0.5), 
@@ -148,10 +148,10 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
-    manipulatorCommandXboxController.y().onTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
-    manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
-    manipulatorCommandXboxController.a().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
-    manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.rightTrigger().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+    manipulatorCommandXboxController.leftTrigger().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
+    manipulatorCommandXboxController.leftTrigger().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
 
