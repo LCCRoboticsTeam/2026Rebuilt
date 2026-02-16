@@ -39,9 +39,9 @@ import java.util.function.BooleanSupplier;
  */
 public class RobotContainer {
   // Subsystems defined here...
-  private final DriveSubsystem driveSubsystem;
-  private final ShooterInSubsystem shooterInSubsystem;
-  private final ShooterOutSubsystem ShooterOutSubsystem;
+  // private final DriveSubsystem driveSubsystem;
+  // private final IntakeWheelsSubsystem intakeWheelsSubsystem;
+  private final MotorSubsystem motorSubsystem;
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
@@ -57,17 +57,17 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
-    driveSubsystem = new DriveSubsystem();
-    shooterInSubsystem = new ShooterInSubsystem();
-    ShooterOutSubsystem = new ShooterOutSubsystem();
+    // driveSubsystem = new DriveSubsystem();
+    // intakeWheelsSubsystem = new IntakeWheelsSubsystem(20);
+    motorSubsystem = new MotorSubsystem();
 
     // Configure the trigger bindings
-    configureBindings();
+    // configureBindings();
     
     // Configure default commands
-    driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
-      driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
-      driverXboxController::getLeftStickButton));
+    // driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
+      // driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
+      // driverXboxController::getLeftStickButton));
 
     SmartDashboard.putData("Shooter In Forward",shooterInSubsystem.Forward());
     SmartDashboard.putData("Shooter In Halt", shooterInSubsystem.Halt());
@@ -110,6 +110,6 @@ public class RobotContainer {
   }
 
   public void zeroHeading() {
-    driveSubsystem.zeroHeading();
+    // driveSubsystem.zeroHeading();
   }
 }

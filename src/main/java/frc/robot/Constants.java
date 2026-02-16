@@ -136,43 +136,28 @@ public final class Constants {
     public static final int kShooterInCanID = 3;
     public static final int kShooterOutCanID = 4;
 
-    public static final double kMotorInMaxOutRange = 0.2;
-    public static final double kMotorInMinOutRange = -0.2;
-
-    public static final double kMotorOutMaxOutRange = 0.2;
-    public static final double kMotorOutMinOutRange = -0.2;
-    
-    public static final double kInForward = -0.4;
-    public static final double kInReversed = -0.15;
-    public static final double kOutForward = 0.4;
-    public static final double kOutReversed = -0.15;
-
-    public static final boolean kMotorTargetVelocityFromDashboard = true;
-
+  public static final class IntakeConstants {
+    public static final boolean kWheelTargetVelocityFromDashboard = true;
+    public static final double kIntakeWheelMaxOutRange = 0.8;
+    public static final double kIntakeWheelMinOutRange = -0.8;
   }
-  public static final class ClimberConstants {
-    public static final int kClimberCanID = 8;
-    public static final int kClimberPositionUp = 68;
-    public static final int kClimberPositionDown = -2;
 
-    public static final double kmaxOutRange = 0.5;
-    public static final double kminOutRange = -0.5;
+  public static class MotorSpeedConstants {
+    public static final double CRAWL_FORWARD = 0.01;
+    public static final double WALK_FORWARD = 0.02;
+    public static final double RUN_FORWARD = 0.03;
+    public static final double CRAWL_BACKWARD = -0.01;
+    public static final double WALK_BACKWARD = -0.02;
+    public static final double RUN_BACKWARD = -0.03;
 
-    public static final double kServoAngleToEnableRatchet = 0.0;
-    public static final double kServoAngleToDisableRatchet = 15.0;
-
-    public static final boolean kTargetPositionFromDashboard = true;
-    public static final boolean kServoAngleFromDashboard = true;
-  }
-  public enum ClimberState {
-    UNKNOWN,
-    CLIMBER_UP,
-    CLIMBER_DOWN
+    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
   }
   public enum motorState {
     UNKNOWN,
     RUNNING,
-    STOPPED,
+    STOPPED;
   }
+
 }
 
