@@ -44,12 +44,12 @@ public class RobotContainer {
   private final ArmSubsystem armSubsystem;
   private final ShooterInSubsystem shooterInSubsystem;
   private final ShooterOutSubsystem shooterOutSubsystem;
+  private final ClimberSubsystem climberSubsystem;
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
   private final CommandXboxController driverCommandXboxController = new CommandXboxController(OIConstants.kDriverControllerPort);
-
-  //2025 REEFSCAPE - private final CommandXboxController manipulatorCommandXboxController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
+  private final CommandXboxController manipulatorCommandXboxController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
@@ -63,6 +63,11 @@ public class RobotContainer {
     armSubsystem = new ArmSubsystem();
     shooterInSubsystem = new ShooterInSubsystem();
     shooterOutSubsystem = new ShooterOutSubsystem();
+    climberSubsystem = new ClimberSubsystem();
+
+    // We always start with CLIMBER_DOWN and the Ratchet disabled
+    climberSubsystem.setClimberState(ClimberState.CLIMBER_DOWN);
+    climberSubsystem.setServoAngle(ClimberConstants.kServoAngleToDisableRatchet);
 
     // Register Named Commands
     //   These are simple commands that are directly generated from the subsystem itself
@@ -78,8 +83,17 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.Forward());
     NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
     NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
+    NamedCommands.registerCommand("ClimberUp", new MoveClimberUpCommand(climberSubsystem));
+    NamedCommands.registerCommand("ClimberDown", new MoveClimberDownCommand(climberSubsystem));
+
     //   These are class-based commands
     NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
+    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOut"), 
+                                                                                 new WaitCommand(1.0), 
+                                                                                 NamedCommands.getCommand("ShooterInForward")));
+    NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
+                                                                                 new WaitCommand(0.5), 
+                                                                                 NamedCommands.getCommand("ShooterOutHalt")));
 
     // Configure the trigger bindings
     configureBindings();
@@ -128,6 +142,15 @@ public class RobotContainer {
 
     // DRIVER XBOX Controller
     //   Note: Right stick and Left stick already mapped via SwerveGamepadDriveCommand() in earlier code
+    // 2025 REEFSCAPE 
+    // driverCommandXboxController.y().onTrue(NamedCommands.getCommand("ElevatorUp"));
+
+
+    // MANIPULATOR XBOX Controller
+    manipulatorCommandXboxController.y().onTrue(NamedCommands.getCommand("StartShooter"));
+    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("StopShooter"));
+    manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimberUp"));
+    manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimberDown"));
 
   }
 

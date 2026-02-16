@@ -132,6 +132,31 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+// -------------------- CLIMBER --------------------
+  public final class ClimberConstants {
+    public static final int kClimberCanID = 19;
+    public static final int kClimberPositionUp = 68; // 68 is the absolute max
+    public static final int kClimberPositionDown = -2; // -2 is the absolute lowest 
+
+    public static final double kmaxOutRange = 0.5;
+    public static final double kminOutRange = -0.5;
+
+    public static final double kServoAngleToEnableRatchet = 0.0;
+    public static final double kServoAngleToDisableRatchet = 15.0;
+
+    public static final boolean kTargetPositionFromDashboard = false;
+    public static final boolean kServoAngleFromDashboard = false;
+  }
+  public enum ClimberState {
+    UNKNOWN,
+    CLIMBER_UP,
+    CLIMBER_DOWN
+  }
+  // ---------------------------------------------
+
+  // -------------------- SHOOTER --------------------
+
   public static final class ShooterConstants {
     public static final boolean kMotorTargetVelocityFromDashboard = true;
     public static final boolean kShooterCommandsFromDashboard = true;
@@ -149,6 +174,10 @@ public final class Constants {
     public static final double kOutReversed = -800;
   }
 
+  // ---------------------------------------------
+
+  // -------------------- INTAKE --------------------
+
   public static final class IntakeConstants {
     public static final boolean kWheelTargetVelocityFromDashboard = true;
     public static final boolean kIntakeCommandsFromDashboard = true;
@@ -158,18 +187,8 @@ public final class Constants {
     public static final double kIntakeInTargetVelocity = 100;
     public static final double kIntakeOutTargetVelocity = -100;
   }
+  // ---------------------------------------------
 
-  public static class MotorSpeedConstants {
-    public static final double CRAWL_FORWARD = 0.01;
-    public static final double WALK_FORWARD = 0.02;
-    public static final double RUN_FORWARD = 0.03;
-    public static final double CRAWL_BACKWARD = -0.01;
-    public static final double WALK_BACKWARD = -0.02;
-    public static final double RUN_BACKWARD = -0.03;
-
-    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
-  }
   public enum motorState {
     UNKNOWN,
     RUNNING,
@@ -180,6 +199,9 @@ public final class Constants {
     public static final boolean kArmTargetPositionFromDashboard = true;
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
+
+    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
   }
 
   public enum armState {
