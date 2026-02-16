@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.MotorSpeedConstants;
-import frc.robot.Constants.motorState;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.armState;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
@@ -22,26 +23,25 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 
-public class MotorSubsystem extends SubsystemBase {
+public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private SparkMax motor;
   private SparkMaxConfig motorConfig;
   private SparkClosedLoopController closedLoopController;
   private RelativeEncoder encoder;
 
-  private double motorTargetPosition;
-  private motorState mState;
-  private boolean MotorControlFromDashboard;
+  private armState aState;
+  private double targetPosition;
 
   // NOTE: Referencing this example code:
   //   https://github.com/REVrobotics/REVLib-Examples/blob/main/Java/SPARK/Closed%20Loop%20Control/src/main/java/frc/robot/Robot.java
 
-  public MotorSubsystem() {
+  public ArmSubsystem() {
     /*
      * Initialize the SPARK MAX and get its encoder and closed loop controller
      * objects for later use.
      */
-    motor = new SparkMax(20, MotorType.kBrushless);
+    motor = new SparkMax(ArmConstants.kArmInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
 
@@ -64,9 +64,8 @@ public class MotorSubsystem extends SubsystemBase {
         .positionConversionFactor(1)
         .velocityConversionFactor(1);
     
-    motorTargetPosition = 0;
-    mState=motorState.UNKNOWN;
-    MotorControlFromDashboard = true;
+    targetPosition = 0;
+    aState=armState.ARM_UP_POSITION;
 
     /*
      * Configure the closed loop controller. We want to make sure we set the
@@ -102,10 +101,8 @@ public class MotorSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     // Initialize dashboard values
-    SmartDashboard.setDefaultNumber("Target Position", 0);
-    SmartDashboard.setDefaultNumber("Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Control Mode", false);
-    SmartDashboard.setDefaultBoolean("Reset Encoder", false);
+    SmartDashboard.setDefaultNumber("ARM Target Position", 0);
+    SmartDashboard.setDefaultBoolean("ARM Reset Encoder", false);
 
   }
   /**
@@ -122,17 +119,31 @@ public class MotorSubsystem extends SubsystemBase {
         });
   }
 
-  
-  public void setmotorTargetPosition(double motorTargetPosition) {
-    this.motorTargetPosition=motorTargetPosition;
+  public Command SetArmUpCommand() {
+    setArmState(armState.ARM_UP_POSITION);
+    return runOnce(() -> setTargetPosition(aState.getPosition()));
   }
 
-  public motorState getMotorState() {
-    return this.mState;
+  public Command SetArmDownCommand() {
+    setArmState(armState.ARM_DOWN_POSITION);
+    return runOnce(() -> setTargetPosition(aState.getPosition()));  
   }
 
-  public void setMotorState(motorState mState) {
-    this.mState =  mState;
+  public Command SetArmMidCommand() {
+    setArmState(armState.ARM_MID_POSITION);
+    return runOnce(() -> setTargetPosition(aState.getPosition()));  
+  }
+
+  public armState getArmState() {
+    return this.aState;
+  }
+
+  public void setArmState(armState aState) {
+    this.aState = aState;
+  }
+
+  public void setTargetPosition(double targetPosition) {
+    this.targetPosition=targetPosition;
   }
 
   /**
@@ -148,34 +159,16 @@ public class MotorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
   
-    if (MotorControlFromDashboard) {
-      if (SmartDashboard.getBoolean("Control Mode", false)) {
-        /*
-         * Get the target velocity from SmartDashboard and set it as the setpoint
-         * for the closed loop controller.
-         */
-        double targetVelocity = SmartDashboard.getNumber("Target Velocity", 0);
-        closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-      } else {
-        /*
-         * Get the target position from SmartDashboard and set it as the setpoint
-         * for the closed loop controller.
-         */
-        double targetPosition = SmartDashboard.getNumber("Target Position", 0);
-        closedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-      }
+    if (ArmConstants.kArmTargetPositionFromDashboard) {
+      targetPosition = SmartDashboard.getNumber("ARM Target Position", 0);
     }
-  else {
-    // Only setting position when not using the Dashboard
-    closedLoopController.setSetpoint(motorTargetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
-  }
-
+    closedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+  
     // Display encoder position and velocity
-    SmartDashboard.putNumber("Actual Position", encoder.getPosition());
-    SmartDashboard.putNumber("Actual Velocity", encoder.getVelocity());
+    SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
 
-    if (SmartDashboard.getBoolean("Reset Encoder", false)) {
-      SmartDashboard.putBoolean("Reset Encoder", false);
+    if (SmartDashboard.getBoolean("ARM Reset Encoder", false)) {
+      SmartDashboard.putBoolean("ARM Reset Encoder", false);
       // Reset the encoder position to 0
       encoder.setPosition(0);
     }

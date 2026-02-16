@@ -6,27 +6,20 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.armState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import com.revrobotics.PersistMode;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import frc.robot.Constants.IntakeConstants;
-import com.revrobotics.spark.config.ClosedLoopConfig;
-
-import frc.robot.Configs;
 
 public class IntakeWheelsSubsystem extends SubsystemBase {
 
@@ -38,8 +31,8 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     private double targetVelocity = 0.0;
 
   /** Creates a new ExampleSubsystem. */
-  public IntakeWheelsSubsystem(int CANId) {
-    m_intakeSpark = new SparkMax(CANId, MotorType.kBrushless);
+  public IntakeWheelsSubsystem() {
+    m_intakeSpark = new SparkMax(IntakeConstants.kShooterInCanID, MotorType.kBrushless);
     m_sparkEncoder = m_intakeSpark.getEncoder();
     m_intakeClosedLoopController = m_intakeSpark.getClosedLoopController();
     m_sparkEncoder.setPosition(0);
@@ -91,6 +84,22 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
         });
   }
 
+  public Command IntakeWheelsInCommand() {
+    return runOnce(() -> setTargetVelocity(IntakeConstants.kIntakeInTargetVelocity));
+  }
+
+  public Command IntakeWheelsOutCommand() {
+    return runOnce(() -> setTargetVelocity(IntakeConstants.kIntakeOutTargetVelocity));
+  }
+
+  public Command IntakeWheelsHaltCommand() {
+    return runOnce(() -> setTargetVelocity(0));
+  }
+
+  public void setTargetVelocity(double targetVelocity) {
+    this.targetVelocity=targetVelocity;
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -107,13 +116,11 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     if (IntakeConstants.kWheelTargetVelocityFromDashboard) {
         targetVelocity = SmartDashboard.getNumber("Intake Target Velocity", 0.0);
     }
-    SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
-    // Command driving and turning SPARKS towards their respective setpoints.
+
     m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+
+    SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
+
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
 }

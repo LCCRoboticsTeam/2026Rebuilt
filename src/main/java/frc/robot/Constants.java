@@ -133,13 +133,30 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
   public static final class ShooterConstants {
+    public static final boolean kMotorTargetVelocityFromDashboard = true;
+    public static final boolean kShooterCommandsFromDashboard = true;
     public static final int kShooterInCanID = 3;
     public static final int kShooterOutCanID = 4;
 
+    public static final double kMotorInMaxOutRange = 0.8;
+    public static final double kMotorInMinOutRange = -0.8;
+    public static final double kInForward = 800;
+    public static final double kInReversed = -800;
+
+    public static final double kMotorOutMaxOutRange = 0.8;
+    public static final double kMotorOutMinOutRange = -0.8; 
+    public static final double kOutForward = 800;
+    public static final double kOutReversed = -800;
+  }
+
   public static final class IntakeConstants {
     public static final boolean kWheelTargetVelocityFromDashboard = true;
+    public static final boolean kIntakeCommandsFromDashboard = true;
+    public static final int kShooterInCanID = 20;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
+    public static final double kIntakeInTargetVelocity = 100;
+    public static final double kIntakeOutTargetVelocity = -100;
   }
 
   public static class MotorSpeedConstants {
@@ -157,6 +174,28 @@ public final class Constants {
     UNKNOWN,
     RUNNING,
     STOPPED;
+  }
+
+  public static final class ArmConstants {
+    public static final boolean kArmTargetPositionFromDashboard = true;
+    public static final boolean kArmCommandsFromDashboard = true;
+    public static final int kArmInCanID = 10;
+  }
+
+  public enum armState {
+    UNKNOWN,
+    ARM_UP_POSITION(0),
+    ARM_MID_POSITION(90),
+    ARM_DOWN_POSITION(180);
+
+    private double armPosition;
+    armState(double armPosition) {
+      this.armPosition = armPosition;
+    }
+    armState() {}
+    public double getPosition() {
+      return armPosition;
+    }
   }
 
 }

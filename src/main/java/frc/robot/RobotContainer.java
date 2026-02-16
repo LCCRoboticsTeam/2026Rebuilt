@@ -39,16 +39,17 @@ import java.util.function.BooleanSupplier;
  */
 public class RobotContainer {
   // Subsystems defined here...
-  // private final DriveSubsystem driveSubsystem;
-  // private final IntakeWheelsSubsystem intakeWheelsSubsystem;
-  private final MotorSubsystem motorSubsystem;
+  private final DriveSubsystem driveSubsystem;
+  private final IntakeWheelsSubsystem intakeWheelsSubsystem;
+  private final ArmSubsystem armSubsystem;
+  private final ShooterInSubsystem shooterInSubsystem;
+  private final ShooterOutSubsystem shooterOutSubsystem;
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
   private final CommandXboxController driverCommandXboxController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   //2025 REEFSCAPE - private final CommandXboxController manipulatorCommandXboxController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
-
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
@@ -57,24 +58,55 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
-    // driveSubsystem = new DriveSubsystem();
-    // intakeWheelsSubsystem = new IntakeWheelsSubsystem(20);
-    motorSubsystem = new MotorSubsystem();
+    driveSubsystem = new DriveSubsystem();
+    intakeWheelsSubsystem = new IntakeWheelsSubsystem();
+    armSubsystem = new ArmSubsystem();
+    shooterInSubsystem = new ShooterInSubsystem();
+    shooterOutSubsystem = new ShooterOutSubsystem();
+
+    // Register Named Commands
+    //   These are simple commands that are directly generated from the subsystem itself
+    NamedCommands.registerCommand("IntakeIn", intakeWheelsSubsystem.IntakeWheelsInCommand());
+    NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
+    NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
+    NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
+    NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
+    NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
+    NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
+    NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
+    NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
+    NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.Forward());
+    NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
+    NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
+    //   These are class-based commands
+    NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
 
     // Configure the trigger bindings
-    // configureBindings();
+    configureBindings();
     
     // Configure default commands
-    // driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
-      // driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
-      // driverXboxController::getLeftStickButton));
+    driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
+      driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
+      driverXboxController::getLeftStickButton));
 
-    SmartDashboard.putData("Shooter In Forward",shooterInSubsystem.Forward());
-    SmartDashboard.putData("Shooter In Halt", shooterInSubsystem.Halt());
-    SmartDashboard.putData("Shooter In Reversed", shooterInSubsystem.Reversed());
-    SmartDashboard.putData("Shooter Out Forward", ShooterOutSubsystem.Forward());
-    SmartDashboard.putData("Shooter Out Halt", ShooterOutSubsystem.Halt());
-    SmartDashboard.putData("Shooter Out Reversed", ShooterOutSubsystem.Reversed());
+    if (IntakeConstants.kIntakeCommandsFromDashboard) {
+      SmartDashboard.putData("IntakeIn", NamedCommands.getCommand("IntakeIn"));
+      SmartDashboard.putData("IntakeOut", NamedCommands.getCommand("IntakeOut"));
+      SmartDashboard.putData("IntakeHalt", NamedCommands.getCommand("IntakeHalt"));
+    }
+    if (ArmConstants.kArmCommandsFromDashboard) {
+      SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
+      SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
+      SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
+    }
+    if (ShooterConstants.kShooterCommandsFromDashboard) {
+      SmartDashboard.putData("ShooterInForward",NamedCommands.getCommand("ShooterInForward"));
+      SmartDashboard.putData("ShooterInHalt", NamedCommands.getCommand("ShooterInHalt"));
+      SmartDashboard.putData("ShooterInReversed", NamedCommands.getCommand("ShooterInReversed"));
+      SmartDashboard.putData("ShooterOutForward", NamedCommands.getCommand("ShooterOutForward"));
+      SmartDashboard.putData("ShooterOutHalt", NamedCommands.getCommand("ShooterOutHalt"));
+      SmartDashboard.putData("ShooterOutReversed", NamedCommands.getCommand("ShooterOutReversed"));
+    }
   }
 
   /**
