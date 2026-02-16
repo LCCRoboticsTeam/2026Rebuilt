@@ -132,6 +132,9 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+  public static final class ShooterConstants {
+    public static final int kShooterInCanID = 3;
+    public static final int kShooterOutCanID = 4;
 
   public static final class IntakeConstants {
     public static final boolean kWheelTargetVelocityFromDashboard = true;

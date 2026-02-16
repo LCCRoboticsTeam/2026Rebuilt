@@ -69,6 +69,12 @@ public class RobotContainer {
       // driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
       // driverXboxController::getLeftStickButton));
 
+    SmartDashboard.putData("Shooter In Forward",shooterInSubsystem.Forward());
+    SmartDashboard.putData("Shooter In Halt", shooterInSubsystem.Halt());
+    SmartDashboard.putData("Shooter In Reversed", shooterInSubsystem.Reversed());
+    SmartDashboard.putData("Shooter Out Forward", ShooterOutSubsystem.Forward());
+    SmartDashboard.putData("Shooter Out Halt", ShooterOutSubsystem.Halt());
+    SmartDashboard.putData("Shooter Out Reversed", ShooterOutSubsystem.Reversed());
   }
 
   /**
