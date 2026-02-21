@@ -24,6 +24,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.motorState;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 
 import frc.robot.Configs;
@@ -36,6 +37,7 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
 
     private final SparkMaxConfig m_wheelMotorConfig;
     private double targetVelocity = 0.0;
+    private motorState mState;
 
   /** Creates a new ExampleSubsystem. */
   public IntakeWheelsSubsystem(int CANId) {
@@ -49,6 +51,9 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     m_wheelMotorConfig.encoder
         .positionConversionFactor(1)
         .velocityConversionFactor(1);
+
+    targetVelocity = 0;
+    mState = motorState.UNKNOWN;
 
     m_wheelMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
@@ -67,8 +72,8 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
           // kV is now in Volts, so we multiply by the nominal voltage (12V)
           .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
       
-      m_intakeSpark.configure(m_wheelMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-      SmartDashboard.setDefaultNumber("Intake Target Velocity", 0);
+    m_intakeSpark.configure(m_wheelMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    SmartDashboard.setDefaultNumber("Intake Target Velocity", 0);
   }
 
 
@@ -101,15 +106,22 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     return false;
   }
 
+  public void setTargetVelocity(double targetVelocity) {
+    this.targetVelocity = targetVelocity;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     if (IntakeConstants.kWheelTargetVelocityFromDashboard) {
-        targetVelocity = SmartDashboard.getNumber("Intake Target Velocity", 0.0);
+      targetVelocity = SmartDashboard.getNumber("Intake Target Velocity", 0.0);
+      SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
+      // Command driving and turning SPARKS towards their respective setpoints.
+      m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    } else {
+      
     }
-    SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
-    // Command driving and turning SPARKS towards their respective setpoints.
-    m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    
   }
 
   @Override

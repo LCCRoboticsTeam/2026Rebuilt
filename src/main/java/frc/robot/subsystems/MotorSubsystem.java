@@ -41,7 +41,7 @@ public class MotorSubsystem extends SubsystemBase {
      * Initialize the SPARK MAX and get its encoder and closed loop controller
      * objects for later use.
      */
-    motor = new SparkMax(20, MotorType.kBrushless);
+    motor = new SparkMax(10, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
 
