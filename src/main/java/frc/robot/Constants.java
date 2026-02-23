@@ -159,7 +159,7 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final boolean kMotorTargetVelocityFromDashboard = false;
-    public static final boolean kShooterCommandsFromDashboard = true;
+    public static final boolean kShooterCommandsFromDashboard = false;
     public static final int kShooterInCanID = 3;
     public static final int kShooterOutCanID = 4;
 
@@ -182,8 +182,8 @@ public final class Constants {
     public static final boolean kWheelTargetVelocityFromDashboard = false;
     public static final boolean kIntakeCommandsFromDashboard = false;
     public static final int kShooterInCanID = 5;
-    public static final double kIntakeWheelMaxOutRange = 0.7;
-    public static final double kIntakeWheelMinOutRange = -0.7;
+    public static final double kIntakeWheelMaxOutRange = 0.8;
+    public static final double kIntakeWheelMinOutRange = -0.8;
     public static final double kIntakeInTargetVelocity = 1500;
     public static final double kIntakeOutTargetVelocity = -900;
   }
@@ -195,20 +195,21 @@ public final class Constants {
     STOPPED;
   }
 
+// -------------------- ARM --------------------
   public static final class ArmConstants {
     public static final boolean kArmTargetPositionFromDashboard = true;
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.3;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.3;
   }
 
   public enum armState {
     UNKNOWN,
     ARM_UP_POSITION(0),
-    ARM_MID_POSITION(90),
-    ARM_DOWN_POSITION(180);
+    ARM_MID_POSITION(0.2),
+    ARM_DOWN_POSITION(0.4);
 
     private double armPosition;
     armState(double armPosition) {
@@ -219,6 +220,7 @@ public final class Constants {
       return armPosition;
     }
   }
+ // ---------------------------------------------
 
 }
 

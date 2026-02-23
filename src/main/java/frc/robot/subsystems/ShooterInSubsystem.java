@@ -32,8 +32,6 @@ public class ShooterInSubsystem extends SubsystemBase {
   private double motorTargetVelocity;
   private motorState mState;
 
-  //private double motorState;
-
   public ShooterInSubsystem() {
     motor = new SparkMax(ShooterConstants.kShooterInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
@@ -66,8 +64,8 @@ public class ShooterInSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     SmartDashboard.setDefaultNumber("Shooter In Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Shooter In Reset Encoder", false);
   }
+
   /**
    * Example command factory method.
    *
@@ -129,8 +127,5 @@ public class ShooterInSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter In Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter In DutyCycle", motor.getAppliedOutput());
   }
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+
 }

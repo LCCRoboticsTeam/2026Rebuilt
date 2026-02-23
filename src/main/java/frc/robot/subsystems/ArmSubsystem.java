@@ -43,6 +43,7 @@ public class ArmSubsystem extends SubsystemBase {
     motor = new SparkMax(ArmConstants.kArmInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
+    encoder.setPosition(0);
 
      /*
      * Create a new SPARK MAX configuration object. This will store the
@@ -145,6 +146,14 @@ public class ArmSubsystem extends SubsystemBase {
     this.targetPosition=targetPosition;
   }
 
+  public double getArmActualPosition() {
+   return encoder.getPosition();
+  }
+
+  public void resetArmPosition() {
+    encoder.setPosition(0);
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -165,13 +174,8 @@ public class ArmSubsystem extends SubsystemBase {
   
     // Display encoder position and velocity
     SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
-
-    if (SmartDashboard.getBoolean("ARM Reset Encoder", false)) {
-      SmartDashboard.putBoolean("ARM Reset Encoder", false);
-      // Reset the encoder position to 0
-      encoder.setPosition(0);
-    }
-
+    SmartDashboard.putNumber("ARM Amps", motor.getOutputCurrent());
+    SmartDashboard.putNumber("ARM DutyCycle", motor.getAppliedOutput());
   }
 
   public double getPosition () { 

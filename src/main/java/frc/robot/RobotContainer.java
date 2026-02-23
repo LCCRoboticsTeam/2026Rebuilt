@@ -54,8 +54,7 @@ public class RobotContainer {
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
-  //2025 REEFSCAPE - private final SendableChooser<Command> autoChooser;
-  //2025 REEFSCAPE - private final SendableChooser<Command> reefAlgaeChooser;
+  private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
@@ -93,11 +92,15 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
     //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
-                                                                                 new WaitCommand(1.5), 
+                                                                                 new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterOutHalt")));
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
     configureBindings();
@@ -155,6 +158,8 @@ public class RobotContainer {
     manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
+    //manipulatorCommandXboxController.b().onTrue(NamedCommands.getCommand("ArmMid"));
+    //manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("ArmDown"));
 
   }
 

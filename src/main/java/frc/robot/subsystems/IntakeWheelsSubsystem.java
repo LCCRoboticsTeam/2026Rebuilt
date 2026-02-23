@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.armState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
@@ -66,12 +65,6 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
       SmartDashboard.setDefaultNumber("Intake Target Velocity", 0);
   }
 
-
-
-  public void resetEncoders() {
-    m_sparkEncoder.setPosition(0);
-  }
-
   /**
    * Example command factory method.
    *
@@ -121,7 +114,9 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
 
     m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
 
-    SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
+    SmartDashboard.putNumber("INTAKE Actual Velocity", m_sparkEncoder.getVelocity());
+    SmartDashboard.putNumber("INTAKE Amps", m_intakeSpark.getOutputCurrent());
+    SmartDashboard.putNumber("INTAKE DutyCycle", m_intakeSpark.getAppliedOutput());
 
   }
 
