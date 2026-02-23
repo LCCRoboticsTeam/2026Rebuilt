@@ -90,7 +90,7 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 16;
     public static final int kRearRightTurningCanId = 18;
 
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = false;
 
     public static final double kSwerveSlideSpeed = 0.15;
     public static final double kSwerveAutoAlignSlideSpeed = 0.15;  // Not as reliable if faster
@@ -165,12 +165,12 @@ public final class Constants {
 
     public static final double kMotorInMaxOutRange = 0.8;
     public static final double kMotorInMinOutRange = -0.8;
-    public static final double kInForward = -3600;
+    public static final double kInForward = -1600;
     public static final double kInReversed = 900;
 
     public static final double kMotorOutMaxOutRange = 0.8;
     public static final double kMotorOutMinOutRange = -0.8; 
-    public static final double kOutForward = 2700;
+    public static final double kOutForward = 3000;
     public static final double kOutReversed = -900;
   } 
 
@@ -179,12 +179,12 @@ public final class Constants {
   // -------------------- INTAKE --------------------
 
   public static final class IntakeConstants {
-    public static final boolean kWheelTargetVelocityFromDashboard = true;
-    public static final boolean kIntakeCommandsFromDashboard = true;
+    public static final boolean kWheelTargetVelocityFromDashboard = false;
+    public static final boolean kIntakeCommandsFromDashboard = false;
     public static final int kShooterInCanID = 5;
-    public static final double kIntakeWheelMaxOutRange = 0.8;
-    public static final double kIntakeWheelMinOutRange = -0.8;
-    public static final double kIntakeInTargetVelocity = 900;
+    public static final double kIntakeWheelMaxOutRange = 0.7;
+    public static final double kIntakeWheelMinOutRange = -0.7;
+    public static final double kIntakeInTargetVelocity = 1500;
     public static final double kIntakeOutTargetVelocity = -900;
   }
   // ---------------------------------------------

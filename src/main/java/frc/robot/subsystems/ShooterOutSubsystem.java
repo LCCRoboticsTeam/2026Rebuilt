@@ -94,6 +94,9 @@ public class ShooterOutSubsystem extends SubsystemBase {
     return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutReversed));
   }
   
+  public double getMotorTargetVelcoity() {
+    return this.motorTargetVelocity;
+  }
   public void setmotorTargetVelocity(double motorTargetVelocity) {
     this.motorTargetVelocity=motorTargetVelocity;
   }

@@ -28,6 +28,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.DriverStation;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -41,8 +42,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.util.PathPlannerLogging;
-//import edu.wpi.first.wpilibj.ADIS16470_IMU
-import com.studica.frc.AHRS;
+import edu.wpi.first.wpilibj.ADIS16470_IMU;
+//import com.studica.frc.AHRS;
 
 import frc.robot.Constants.DriveConstants;
 //import frc.robot.Robot;
@@ -73,8 +74,8 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kUSB1);
-
+  //private final AHRS m_gyro = new AHRS(AHRS.NavXComType.kUSB1);
+  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
   private double m_currentTranslationDir = 0.0;
@@ -183,7 +184,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     SmartDashboard.putData("Field", m_field);  
     //SmartDashboard.putNumber("Gyro Heading: ", getHeading()); 
-    SmartDashboard.putNumber("Gyro Yaw: ", ((DriveConstants.kGyroReversed ? -1.0 : 1.0)*m_gyro.getYaw())); 
+    //SmartDashboard.putNumber("Gyro Yaw: ", ((DriveConstants.kGyroReversed ? -1.0 : 1.0)*m_gyro.getYaw())); 
     SmartDashboard.putNumber("Gyro Angle: ", ((DriveConstants.kGyroReversed ? -1.0 : 1.0)*m_gyro.getAngle())); 
  
   }
@@ -386,7 +387,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Adjust heading of the robot such that it is facing the Drive Station. */
    public void robotFacingDriveStation() {
-     m_gyro.setAngleAdjustment(180.0);
+     //m_gyro.setAngleAdjustment(180.0);
    }
 
 }

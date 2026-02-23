@@ -45,6 +45,7 @@ public class RobotContainer {
   private final ShooterInSubsystem shooterInSubsystem;
   private final ShooterOutSubsystem shooterOutSubsystem;
   private final ClimberSubsystem climberSubsystem;
+  //private final GyroSubsystem gyroSubsystem;
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
@@ -64,6 +65,7 @@ public class RobotContainer {
     shooterInSubsystem = new ShooterInSubsystem();
     shooterOutSubsystem = new ShooterOutSubsystem();
     climberSubsystem = new ClimberSubsystem();
+    //gyroSubsystem = new GyroSubsystem();
 
     // We always start with CLIMBER_DOWN and the Ratchet disabled
     climberSubsystem.setClimberState(ClimberState.CLIMBER_DOWN);
@@ -104,7 +106,6 @@ public class RobotContainer {
     driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
       driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
       driverXboxController::getLeftStickButton));
-
     if (IntakeConstants.kIntakeCommandsFromDashboard) {
       SmartDashboard.putData("IntakeIn", NamedCommands.getCommand("IntakeIn"));
       SmartDashboard.putData("IntakeOut", NamedCommands.getCommand("IntakeOut"));
@@ -148,10 +149,10 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
-    manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
-    manipulatorCommandXboxController.rightTrigger().negate().onTrue(NamedCommands.getCommand("StopShooter"));
-    manipulatorCommandXboxController.leftTrigger().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
-    manipulatorCommandXboxController.leftTrigger().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+    manipulatorCommandXboxController.a().whileTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
+    manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
 
@@ -168,6 +169,6 @@ public class RobotContainer {
   }
 
   public void zeroHeading() {
-    // driveSubsystem.zeroHeading();
+    driveSubsystem.zeroHeading();
   }
 }

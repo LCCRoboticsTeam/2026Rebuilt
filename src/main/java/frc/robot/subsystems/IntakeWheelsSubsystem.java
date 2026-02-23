@@ -18,6 +18,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 
@@ -38,6 +39,7 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     m_sparkEncoder.setPosition(0);
 
     m_wheelMotorConfig = new SparkMaxConfig();
+    m_wheelMotorConfig.idleMode(IdleMode.kCoast);
     
     m_wheelMotorConfig.encoder
         .positionConversionFactor(1)
@@ -50,12 +52,12 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
         .p(0.1)
         .i(0)
         .d(0)
-        .outputRange(-0.2, 0.2)
+        .outputRange(IntakeConstants.kIntakeWheelMinOutRange, IntakeConstants.kIntakeWheelMaxOutRange)
         // Set PID values for velocity control in slot 1
         .p(0.0001, ClosedLoopSlot.kSlot1)
         .i(0, ClosedLoopSlot.kSlot1)
         .d(0, ClosedLoopSlot.kSlot1)
-        .outputRange(-0.2, 0.2, ClosedLoopSlot.kSlot1)
+        .outputRange(IntakeConstants.kIntakeWheelMinOutRange, IntakeConstants.kIntakeWheelMaxOutRange, ClosedLoopSlot.kSlot1)
         .feedForward
           // kV is now in Volts, so we multiply by the nominal voltage (12V)
           .kV(12.0 / 5767, ClosedLoopSlot.kSlot1);
@@ -114,10 +116,10 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     if (IntakeConstants.kWheelTargetVelocityFromDashboard) {
-        targetVelocity = SmartDashboard.getNumber("Intake Target Velocity", 0.0);
+      targetVelocity = SmartDashboard.getNumber("Intake Target Velocity", 0.0);
     }
 
-    m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    m_intakeClosedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
 
     SmartDashboard.putNumber("Intake Actual Velocity", m_sparkEncoder.getVelocity());
 
