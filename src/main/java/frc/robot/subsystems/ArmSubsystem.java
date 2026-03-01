@@ -52,7 +52,7 @@ public class ArmSubsystem extends SubsystemBase {
     motorConfig = new SparkMaxConfig();
 
     // This sets default idel mode to brake mode
-    motorConfig.idleMode(IdleMode.kBrake);
+    motorConfig.idleMode(IdleMode.kCoast); 
 
     /*
      * Configure the encoder. For this specific example, we are using the
@@ -61,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
      * factors.
      */
     motorConfig.encoder
-        .positionConversionFactor(1)
+        .positionConversionFactor(100)
         .velocityConversionFactor(1);
     
     targetPosition = 0;

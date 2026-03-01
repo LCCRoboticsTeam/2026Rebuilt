@@ -54,7 +54,7 @@ public class RobotContainer {
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
@@ -81,7 +81,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
-    NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.Forward());
+    NamedCommands.registerCommand("ShooterOutForwardLow", shooterOutSubsystem.ForwardLow());
+    NamedCommands.registerCommand("ShooterOutForwardHigh", shooterOutSubsystem.ForwardHigh());
     NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
     NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
     NamedCommands.registerCommand("ClimbUp", new MoveClimberUpCommand(climberSubsystem));
@@ -91,16 +92,19 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
     //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
-    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
+    NamedCommands.registerCommand("StartShooterLow",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardLow"), 
                                                                                  new WaitCommand(0.5), 
+                                                                                 NamedCommands.getCommand("ShooterInForward")));
+    NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardLow"), 
+                                                                                 new WaitCommand(0.75), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterOutHalt")));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
     configureBindings();
@@ -152,10 +156,14 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
-    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooterLow"));  // Hold button to keep shooting
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+    manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.a().whileTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
     manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
+    manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
     //manipulatorCommandXboxController.b().onTrue(NamedCommands.getCommand("ArmMid"));
@@ -170,6 +178,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
+    // Do we need to program driveSubsystem to tell it which way the robot is facing?
+
+    //return autoChooser.getSelected();
     return null;
   }
 

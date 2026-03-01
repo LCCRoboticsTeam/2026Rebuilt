@@ -84,10 +84,13 @@ public class ShooterOutSubsystem extends SubsystemBase {
     return runOnce(() -> setmotorTargetVelocity(0));
   }
 
-  public Command Forward() {
-    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForward));
+  public Command ForwardLow() {
+    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForwardLow));
   }
   
+  public Command ForwardHigh() {
+    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForwardHigh));
+  }
   public Command Reversed() {
     return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutReversed));
   }

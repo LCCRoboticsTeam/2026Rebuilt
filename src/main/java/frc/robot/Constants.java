@@ -165,12 +165,13 @@ public final class Constants {
 
     public static final double kMotorInMaxOutRange = 0.8;
     public static final double kMotorInMinOutRange = -0.8;
-    public static final double kInForward = -1600;
+    public static final double kInForward = -4200;
     public static final double kInReversed = 900;
 
     public static final double kMotorOutMaxOutRange = 0.8;
     public static final double kMotorOutMinOutRange = -0.8; 
-    public static final double kOutForward = 3000;
+    public static final double kOutForwardLow = 3000;
+    public static final double kOutForwardHigh = 4200;
     public static final double kOutReversed = -900;
   } 
 
@@ -184,7 +185,7 @@ public final class Constants {
     public static final int kShooterInCanID = 5;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
-    public static final double kIntakeInTargetVelocity = 1500;
+    public static final double kIntakeInTargetVelocity = 2100;
     public static final double kIntakeOutTargetVelocity = -900;
   }
   // ---------------------------------------------
@@ -201,8 +202,8 @@ public final class Constants {
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.3;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.3;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.6;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.6;
   }
 
   public enum armState {

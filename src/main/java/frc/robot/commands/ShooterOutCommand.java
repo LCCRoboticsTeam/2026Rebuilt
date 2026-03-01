@@ -26,7 +26,7 @@ public class ShooterOutCommand extends Command{
             m_subsystem.setmotorTargetVelocity(0);
             m_subsystem.setMotorState(motorState.STOPPED);
         } else {
-            m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForward);
+            m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForwardLow);
             m_subsystem.setMotorState(motorState.RUNNING);
         }
     }
@@ -34,10 +34,10 @@ public class ShooterOutCommand extends Command{
     public void execute() {
         if (!(rBumper.getAsBoolean() && lBumper.getAsBoolean())) {
             if(rBumper.getAsBoolean()) {
-                m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForward + 300);
+                m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForwardLow + 300);
             }
             if (lBumper.getAsBoolean()) {
-                m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForward - 300);
+                m_subsystem.setmotorTargetVelocity(ShooterConstants.kOutForwardLow - 300);
             }
     
         }
