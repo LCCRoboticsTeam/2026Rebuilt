@@ -198,19 +198,19 @@ public final class Constants {
 
 // -------------------- ARM --------------------
   public static final class ArmConstants {
-    public static final boolean kArmTargetPositionFromDashboard = true;
+    public static final boolean kArmTargetPositionFromDashboard = false;
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.6;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.6;
+    public static final double MOTOR_MIN_OUT_RANGE = -1.0;
+    public static final double MOTOR_MAX_OUT_RANGE = 1.0;
   }
 
   public enum armState {
     UNKNOWN,
     ARM_UP_POSITION(0),
     ARM_MID_POSITION(0.2),
-    ARM_DOWN_POSITION(0.4);
+    ARM_DOWN_POSITION(25.4);
 
     private double armPosition;
     armState(double armPosition) {

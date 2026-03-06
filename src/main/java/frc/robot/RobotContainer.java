@@ -54,7 +54,7 @@ public class RobotContainer {
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
-  //private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
@@ -78,6 +78,7 @@ public class RobotContainer {
     //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
     //NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
     //NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
+    //NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
@@ -85,13 +86,19 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterOutForwardHigh", shooterOutSubsystem.ForwardHigh());
     NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
     NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
+
+    //   These are class-based or more complex commands
     NamedCommands.registerCommand("ClimbUp", new MoveClimberUpCommand(climberSubsystem));
     NamedCommands.registerCommand("ClimbDown", new MoveClimberDownCommand(climberSubsystem));
-
-    //   These are class-based commands
     NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
+
     //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
+    //NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ShooterInReversed"),
+    //                                                                   NamedCommands.getCommand("ArmDown"), 
+    //                                                                   new WaitCommand(1.0),
+    //                                                                   NamedCommands.getCommand("DisableArmMotor"), 
+    //                                                                   NamedCommands.getCommand("ShooterInHalt")));
     NamedCommands.registerCommand("StartShooterLow",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardLow"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
@@ -103,8 +110,8 @@ public class RobotContainer {
                                                                                  NamedCommands.getCommand("ShooterOutHalt")));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
-    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
     configureBindings();
@@ -119,9 +126,10 @@ public class RobotContainer {
       SmartDashboard.putData("IntakeHalt", NamedCommands.getCommand("IntakeHalt"));
     }
     if (ArmConstants.kArmCommandsFromDashboard) {
-      SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
-      SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
-      SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
+      //SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
+      //SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
+      //SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
+      //SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {
       SmartDashboard.putData("ShooterInForward",NamedCommands.getCommand("ShooterInForward"));
@@ -180,8 +188,8 @@ public class RobotContainer {
 
     // Do we need to program driveSubsystem to tell it which way the robot is facing?
 
-    //return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
+    //return null;
   }
 
   public void zeroHeading() {

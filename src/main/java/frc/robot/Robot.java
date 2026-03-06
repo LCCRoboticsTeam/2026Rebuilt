@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     // Need for Grapple Hook hardware client for LaserCAN
     CanBridge.runTCP();
 
-    PortForwarder.add(5800, "photonvision.local", 5800);
+    //PortForwarder.add(5800, "photonvision.local", 5800);
 
     // FIXME: Potental code to clear old entries from SmartDashboard
     SmartDashboard.getKeys().stream().map(SmartDashboard::getEntry).peek(NetworkTableEntry::clearPersistent)

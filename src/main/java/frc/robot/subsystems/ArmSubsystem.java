@@ -31,6 +31,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   private armState aState;
   private double targetPosition;
+  private boolean motorStopped;
 
   // NOTE: Referencing this example code:
   //   https://github.com/REVrobotics/REVLib-Examples/blob/main/Java/SPARK/Closed%20Loop%20Control/src/main/java/frc/robot/Robot.java
@@ -75,7 +76,7 @@ public class ArmSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.1)
+        .p(0.5) // was 0.1
         .i(0)
         .d(0)
         .outputRange(ArmConstants.MOTOR_MIN_OUT_RANGE, ArmConstants.MOTOR_MAX_OUT_RANGE)
@@ -100,6 +101,8 @@ public class ArmSubsystem extends SubsystemBase {
      */
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
+
+    motorStopped=false;
     // Initialize dashboard values
     SmartDashboard.setDefaultNumber("ARM Target Position", 0);
     SmartDashboard.setDefaultBoolean("ARM Reset Encoder", false);
@@ -132,6 +135,16 @@ public class ArmSubsystem extends SubsystemBase {
   public Command SetArmMidCommand() {
     setArmState(armState.ARM_MID_POSITION);
     return runOnce(() -> setTargetPosition(aState.getPosition()));  
+  }
+
+  public Command DisableArmMotorCommand() {
+    return runOnce(() -> DisableArmMotor());  
+  }
+
+  public void DisableArmMotor() {
+    motorStopped=true;
+    motor.disable();
+    setArmState(armState.UNKNOWN);
   }
 
   public armState getArmState() {
@@ -170,7 +183,9 @@ public class ArmSubsystem extends SubsystemBase {
     if (ArmConstants.kArmTargetPositionFromDashboard) {
       targetPosition = SmartDashboard.getNumber("ARM Target Position", 0);
     }
-    closedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    if (!motorStopped) {
+      closedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+    }
   
     // Display encoder position and velocity
     SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
