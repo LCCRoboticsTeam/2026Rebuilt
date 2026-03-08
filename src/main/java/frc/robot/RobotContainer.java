@@ -122,7 +122,7 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
-    autoChooser = AutoBuilder.buildAutoChooser("RightHubShootHubShoot");
+    autoChooser = AutoBuilder.buildAutoChooser("RightHubShoot");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
