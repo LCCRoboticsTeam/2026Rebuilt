@@ -56,6 +56,10 @@ public class RobotContainer {
   // Dashboard - Choosers
   private final SendableChooser<Command> autoChooser;
 
+  // Cameras and Vision
+  UsbCamera hoppersideUsbCamera = CameraServer.startAutomaticCapture(1);
+  UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
     driveSubsystem = new DriveSubsystem();
@@ -65,6 +69,8 @@ public class RobotContainer {
     shooterOutSubsystem = new ShooterOutSubsystem();
     climberSubsystem = new ClimberSubsystem();
     //gyroSubsystem = new GyroSubsystem();
+
+
 
     // We always start with CLIMBER_DOWN and the Ratchet disabled
     climberSubsystem.setClimberState(ClimberState.CLIMBER_DOWN);
@@ -82,10 +88,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
-    NamedCommands.registerCommand("ShooterOutForwardLow", shooterOutSubsystem.ForwardLow());
+    NamedCommands.registerCommand("ShooterInCommand", new ShooterInCommand(shooterInSubsystem));
+    NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.ForwardLow());
     NamedCommands.registerCommand("ShooterOutForwardHigh", shooterOutSubsystem.ForwardHigh());
     NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
     NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
+    NamedCommands.registerCommand("ShooterOutCommand", new ShooterOutCommand(shooterOutSubsystem));
 
     //   These are class-based or more complex commands
     NamedCommands.registerCommand("ClimbUp", new MoveClimberUpCommand(climberSubsystem));
@@ -99,22 +107,28 @@ public class RobotContainer {
     //                                                                   new WaitCommand(1.0),
     //                                                                   NamedCommands.getCommand("DisableArmMotor"), 
     //                                                                   NamedCommands.getCommand("ShooterInHalt")));
-    NamedCommands.registerCommand("StartShooterLow",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardLow"), 
+    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
-    NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardLow"), 
+    NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardHigh"), 
                                                                                  new WaitCommand(0.75), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
-                                                                                 new WaitCommand(0.5), 
-                                                                                 NamedCommands.getCommand("ShooterOutHalt")));
+                                                                                  new WaitCommand(0.5), 
+                                                                                  NamedCommands.getCommand("ShooterOutHalt")));
+    NamedCommands.registerCommand("ShooterToggleCommand", new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutCommand"),
+                                                                                  new WaitCommand(0.5),
+                                                                                  NamedCommands.getCommand("ShooterInCommand")));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    autoChooser = AutoBuilder.buildAutoChooser("RightHubShootHubShoot");
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putData("Reset Gyro Heading", driveSubsystem.zeroHeadingCommand());
     
     // Configure default commands
     driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
@@ -164,16 +178,17 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
-    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooterLow"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.a().whileTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
     manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
-    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
+    manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("IntakeOut"));
     manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
+    manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
     //manipulatorCommandXboxController.b().onTrue(NamedCommands.getCommand("ArmMid"));
     //manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("ArmDown"));
 
@@ -187,7 +202,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
 
     // Do we need to program driveSubsystem to tell it which way the robot is facing?
-
+    // driveSubsystem.robotFacingDriveStation();
     return autoChooser.getSelected();
     //return null;
   }

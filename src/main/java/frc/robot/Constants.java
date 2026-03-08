@@ -90,7 +90,7 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 16;
     public static final int kRearRightTurningCanId = 18;
 
-    public static final boolean kGyroReversed = false;
+    public static final boolean kGyroReversed = true; // flase
 
     public static final double kSwerveSlideSpeed = 0.15;
     public static final double kSwerveAutoAlignSlideSpeed = 0.15;  // Not as reliable if faster
@@ -114,7 +114,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 0.0731; // was 0.0741; was 0.0762 for 2024 Crescendo (was 0.0762)
+    public static final double kWheelDiameterMeters = 0.0751; //was 0731 | was 0.0741; was 0.0762 for 2024 Crescendo (was 0.0762)
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
@@ -171,7 +171,7 @@ public final class Constants {
     public static final double kMotorOutMaxOutRange = 0.8;
     public static final double kMotorOutMinOutRange = -0.8; 
     public static final double kOutForwardLow = 3000;
-    public static final double kOutForwardHigh = 4200;
+    public static final double kOutForwardHigh = 3600;
     public static final double kOutReversed = -900;
   } 
 
@@ -185,7 +185,7 @@ public final class Constants {
     public static final int kShooterInCanID = 5;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
-    public static final double kIntakeInTargetVelocity = 2100;
+    public static final double kIntakeInTargetVelocity = 2500;
     public static final double kIntakeOutTargetVelocity = -900;
   }
   // ---------------------------------------------
