@@ -40,12 +40,12 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   // Subsystems defined here...
   private final DriveSubsystem driveSubsystem;
-  private final IntakeWheelsSubsystem intakeWheelsSubsystem;
-  //private final ArmSubsystem armSubsystem;
-  private final ShooterInSubsystem shooterInSubsystem;
-  private final ShooterOutSubsystem shooterOutSubsystem;
-  private final ClimberSubsystem climberSubsystem;
-  //private final GyroSubsystem gyroSubsystem;
+  private final IntakeWheelsSubsystem intakeWheelsSubsystem = new IntakeWheelsSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final ShooterInSubsystem shooterInSubsystem = new ShooterInSubsystem();
+  private final ShooterOutSubsystem shooterOutSubsystem = new ShooterOutSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  //private final GyroSubsystem gyroSubsystem = new GyroSubsystem();
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
@@ -57,20 +57,12 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   // Cameras and Vision
-  UsbCamera hoppersideUsbCamera = CameraServer.startAutomaticCapture(1);
-  UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
+  //UsbCamera hoppersideUsbCamera = CameraServer.startAutomaticCapture(1);
+  //UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
     driveSubsystem = new DriveSubsystem();
-    intakeWheelsSubsystem = new IntakeWheelsSubsystem();
-    //armSubsystem = new ArmSubsystem();
-    shooterInSubsystem = new ShooterInSubsystem();
-    shooterOutSubsystem = new ShooterOutSubsystem();
-    climberSubsystem = new ClimberSubsystem();
-    //gyroSubsystem = new GyroSubsystem();
-
-
 
     // We always start with CLIMBER_DOWN and the Ratchet disabled
     climberSubsystem.setClimberState(ClimberState.CLIMBER_DOWN);

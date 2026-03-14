@@ -55,7 +55,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3.75;  // Orig 4.8, 2024Crecendo it was 4.0, 2025Reefscape trying slower
+    public static final double kMaxSpeedMetersPerSecond = 2.5;  // Orig 4.8, 2024Crecendo 4.0, 2025Reefscape 3.75, 2026Rebuilt trying 2.5
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionalSlewRate = 4; // radians per second; was .6
@@ -63,9 +63,9 @@ public final class Constants {
     public static final double kRotationalSlewRate = 3; // percent per second (1 = 100%); was .9
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(24.25);
+    public static final double kTrackWidth = Units.inchesToMeters(23.5); // 2025Reefscape 24.25
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(24.25); 
+    public static final double kWheelBase = Units.inchesToMeters(23.5); // 2025Reefscape 24.25
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -198,19 +198,19 @@ public final class Constants {
 
 // -------------------- ARM --------------------
   public static final class ArmConstants {
-    public static final boolean kArmTargetPositionFromDashboard = false;
-    public static final boolean kArmCommandsFromDashboard = true;
+    public static final boolean kArmTargetPositionFromDashboard = true;
+    public static final boolean kArmCommandsFromDashboard = false;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -1.0;
-    public static final double MOTOR_MAX_OUT_RANGE = 1.0;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.8;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.8;
   }
 
   public enum armState {
     UNKNOWN,
     ARM_UP_POSITION(0),
-    ARM_MID_POSITION(0.2),
-    ARM_DOWN_POSITION(25.4);
+    ARM_MID_POSITION(7.0),
+    ARM_DOWN_POSITION(10.0);
 
     private double armPosition;
     armState(double armPosition) {

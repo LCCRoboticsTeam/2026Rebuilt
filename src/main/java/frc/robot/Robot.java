@@ -42,8 +42,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(this::isEnabled);
 
-    //FollowPathCommand.warmupCommand().schedule();
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    FollowPathCommand.warmupCommand().schedule();
+    //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
     //enableLiveWindowInTest(true);
   }
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      //CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 

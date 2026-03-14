@@ -34,8 +34,9 @@ public class SwerveGamepadDriveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    swerveDriveTrain.zeroHeading();
-
+    // We DO NOT WANT THIS since this command is called first time after autonomous, entering teleop and will reset
+    // the gyro
+    //swerveDriveTrain.zeroHeading();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

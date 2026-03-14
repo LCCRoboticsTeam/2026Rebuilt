@@ -21,6 +21,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
+import com.revrobotics.spark.SparkLimitSwitch;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -28,6 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
   private SparkMaxConfig motorConfig;
   private SparkClosedLoopController closedLoopController;
   private RelativeEncoder encoder;
+  //private SparkLimitSwitch m_forwardLimit;
+  //private SparkLimitSwitch m_reverseLimit;
 
   private armState aState;
   private double targetPosition;
@@ -53,7 +56,7 @@ public class ArmSubsystem extends SubsystemBase {
     motorConfig = new SparkMaxConfig();
 
     // This sets default idel mode to brake mode
-    motorConfig.idleMode(IdleMode.kCoast); 
+    motorConfig.idleMode(IdleMode.kCoast);  
 
     /*
      * Configure the encoder. For this specific example, we are using the
@@ -62,8 +65,16 @@ public class ArmSubsystem extends SubsystemBase {
      * factors.
      */
     motorConfig.encoder
-        .positionConversionFactor(100)
+        .positionConversionFactor(1)
         .velocityConversionFactor(1);
+
+    //m_forwardLimit = leftMotor.getForwardLimitSwitch();
+    //m_reverseLimit = leftMotor.getReverseLimitSwitch();
+
+    //m_forwardLimit. enableLimitSwitch(false);
+    //m_reverseLimit.enableLimitSwitch(false);
+    //SmartDashboard.putBoolean("Forward Limit Enabled", m_forwardLimit.isLimitSwitchEnabled());
+    //SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
     
     targetPosition = 0;
     aState=armState.ARM_UP_POSITION;
@@ -76,7 +87,7 @@ public class ArmSubsystem extends SubsystemBase {
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
-        .p(0.5) // was 0.1
+        .p(0.1) // was 0.1
         .i(0)
         .d(0)
         .outputRange(ArmConstants.MOTOR_MIN_OUT_RANGE, ArmConstants.MOTOR_MAX_OUT_RANGE)
@@ -191,6 +202,12 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("ARM Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("ARM DutyCycle", motor.getAppliedOutput());
+
+    //SparkLimitSwitch forwardLimitSwitch = leftMotor.getForwardLimitSwitch();
+    //SmartDashboard.putBoolean("ELEV Left Limit FWD", forwardLimitSwitch.isPressed());
+    //SparkLimitSwitch reverseLimitSwitch = leftMotor.getForwardLimitSwitch();
+    //SmartDashboard.putBoolean("ELEV Left Limit REV", reverseLimitSwitch.isPressed());
+
   }
 
   public double getPosition () { 
