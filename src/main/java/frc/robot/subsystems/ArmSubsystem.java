@@ -15,18 +15,18 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkLimitSwitch;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  private SparkMax motor;
-  private SparkMaxConfig motorConfig;
+  private SparkFlex motor;
+  private SparkFlexConfig motorConfig;
   private SparkClosedLoopController closedLoopController;
   private RelativeEncoder encoder;
   //private SparkLimitSwitch m_forwardLimit;
@@ -44,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Initialize the SPARK MAX and get its encoder and closed loop controller
      * objects for later use.
      */
-    motor = new SparkMax(ArmConstants.kArmInCanID, MotorType.kBrushless);
+    motor = new SparkFlex(ArmConstants.kArmInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
     encoder.setPosition(0);
@@ -53,7 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Create a new SPARK MAX configuration object. This will store the
      * configuration parameters for the SPARK MAX that we will set below.
      */
-    motorConfig = new SparkMaxConfig();
+    motorConfig = new SparkFlexConfig();
 
     // This sets default idel mode to brake mode
     motorConfig.idleMode(IdleMode.kCoast);  

@@ -74,9 +74,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
     NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
     //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
-    //NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
+    NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
     //NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
-    //NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
+    NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
@@ -133,9 +133,9 @@ public class RobotContainer {
     }
     if (ArmConstants.kArmCommandsFromDashboard) {
       //SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
-      //SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
-      //SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
-      //SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
+      SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
+      SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
+      SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {
       SmartDashboard.putData("ShooterInForward",NamedCommands.getCommand("ShooterInForward"));

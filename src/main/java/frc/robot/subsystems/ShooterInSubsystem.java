@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,10 +33,15 @@ public class ShooterInSubsystem extends SubsystemBase {
   private double motorTargetVelocity;
   private motorState mState;
 
+  private Servo servo;
+
   public ShooterInSubsystem() {
     motor = new SparkMax(ShooterConstants.kShooterInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
+
+    servo = new Servo(9);
+    SmartDashboard.setDefaultNumber("SHOOTIN Servo Tgt Angle",0);
 
     motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kCoast);
@@ -64,6 +70,8 @@ public class ShooterInSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     SmartDashboard.setDefaultNumber("Shooter In Target Velocity", 0);
+    SmartDashboard.setDefaultNumber("SetServoValue", 0);
+
   }
 
   /**
@@ -104,6 +112,13 @@ public class ShooterInSubsystem extends SubsystemBase {
     this.mState =  mState;
   }
 
+  public void setServoAngle (double angle) {
+    servo.setAngle(angle);
+  }
+  public double getServoAngle () {
+    return servo.getAngle();
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -126,6 +141,8 @@ public class ShooterInSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter In Actual Vel", encoder.getVelocity());
     SmartDashboard.putNumber("Shooter In Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter In DutyCycle", motor.getAppliedOutput());
+
+    setServoAngle(SmartDashboard.getNumber("SHOOTIN Servo Tgt Angle", 0));
   }
 
 }

@@ -136,7 +136,7 @@ public final class Constants {
 // -------------------- CLIMBER --------------------
   public final class ClimberConstants {
     public static final int kClimberCanID = 8;
-    public static final int kClimberPositionUp = 68; // 68 is the absolute max
+    public static final int kClimberPositionUp = 60; // 68 is the absolute max
     public static final int kClimberPositionDown = -2; // -2 is the absolute lowest 
 
     public static final double kmaxOutRange = 0.5;
@@ -185,7 +185,7 @@ public final class Constants {
     public static final int kShooterInCanID = 5;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
-    public static final double kIntakeInTargetVelocity = 2500;
+    public static final double kIntakeInTargetVelocity = 3600;//was 2500
     public static final double kIntakeOutTargetVelocity = -900;
   }
   // ---------------------------------------------
@@ -199,18 +199,18 @@ public final class Constants {
 // -------------------- ARM --------------------
   public static final class ArmConstants {
     public static final boolean kArmTargetPositionFromDashboard = true;
-    public static final boolean kArmCommandsFromDashboard = false;
+    public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.8;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.8;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
   }
 
   public enum armState {
     UNKNOWN,
     ARM_UP_POSITION(0),
-    ARM_MID_POSITION(7.0),
-    ARM_DOWN_POSITION(10.0);
+    ARM_MID_POSITION(9.0),
+    ARM_DOWN_POSITION(12.5);
 
     private double armPosition;
     armState(double armPosition) {
