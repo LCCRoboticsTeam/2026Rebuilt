@@ -34,14 +34,14 @@ public class ShooterInSubsystem extends SubsystemBase {
   private motorState mState;
 
   private Servo servo;
+  private boolean servoEnable = true;
 
   public ShooterInSubsystem() {
     motor = new SparkMax(ShooterConstants.kShooterInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
 
-    servo = new Servo(9);
-    SmartDashboard.setDefaultNumber("SHOOTIN Servo Tgt Angle",0);
+    servo = new Servo(ShooterConstants.kIntakeInServoChannel);
 
     motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kCoast);
@@ -70,7 +70,7 @@ public class ShooterInSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     SmartDashboard.setDefaultNumber("Shooter In Target Velocity", 0);
-    SmartDashboard.setDefaultNumber("SetServoValue", 0);
+    SmartDashboard.setDefaultBoolean("Shooter In Agitator Enable", false);
 
   }
 
@@ -112,13 +112,6 @@ public class ShooterInSubsystem extends SubsystemBase {
     this.mState =  mState;
   }
 
-  public void setServoAngle (double angle) {
-    servo.setAngle(angle);
-  }
-  public double getServoAngle () {
-    return servo.getAngle();
-  }
-
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -131,18 +124,33 @@ public class ShooterInSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    servoEnable=SmartDashboard.getBoolean("Shooter In Agitator Enable", false);
+
     if (ShooterConstants.kMotorTargetVelocityFromDashboard) {
       double targetVelocity = SmartDashboard.getNumber("Shooter In Target Velocity", 0);
-        closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-    }
+      closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        if (servoEnable) {
+          if (targetVelocity!=0) {
+            servo.set(ShooterConstants.kServoSpeed);
+          } else {
+            servo.set(0);
+          }
+        }
+      }
     else {
       closedLoopController.setSetpoint(motorTargetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+      if (servoEnable) {
+        if (motorTargetVelocity!=0) {
+          servo.set(ShooterConstants.kServoSpeed);
+        } else {
+          servo.set(0);
+        }
+      }
     }
     SmartDashboard.putNumber("Shooter In Actual Vel", encoder.getVelocity());
     SmartDashboard.putNumber("Shooter In Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter In DutyCycle", motor.getAppliedOutput());
 
-    setServoAngle(SmartDashboard.getNumber("SHOOTIN Servo Tgt Angle", 0));
   }
 
 }

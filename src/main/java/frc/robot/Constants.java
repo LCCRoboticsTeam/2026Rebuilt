@@ -173,6 +173,9 @@ public final class Constants {
     public static final double kOutForwardLow = 3000;
     public static final double kOutForwardHigh = 3600;
     public static final double kOutReversed = -900;
+
+    public static final int kIntakeInServoChannel = 9;
+    public static final double kServoSpeed = 1.0; // Must be between -1.0 and 1.0, though seems >0.5
   } 
 
   // ---------------------------------------------
@@ -187,6 +190,7 @@ public final class Constants {
     public static final double kIntakeWheelMinOutRange = -0.8;
     public static final double kIntakeInTargetVelocity = 3600;//was 2500
     public static final double kIntakeOutTargetVelocity = -900;
+
   }
   // ---------------------------------------------
 
@@ -198,7 +202,7 @@ public final class Constants {
 
 // -------------------- ARM --------------------
   public static final class ArmConstants {
-    public static final boolean kArmTargetPositionFromDashboard = true;
+    public static final boolean kArmTargetPositionFromDashboard = false;
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
@@ -210,7 +214,7 @@ public final class Constants {
     UNKNOWN,
     ARM_UP_POSITION(0),
     ARM_MID_POSITION(9.0),
-    ARM_DOWN_POSITION(12.5);
+    ARM_DOWN_POSITION(11.5);
 
     private double armPosition;
     armState(double armPosition) {

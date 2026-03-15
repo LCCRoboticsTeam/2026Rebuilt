@@ -75,8 +75,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
     //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
     NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
-    //NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
+    NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
     NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
+    NamedCommands.registerCommand("EnableArmMotor", armSubsystem.EnableArmMotorCommand());
     NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
     NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
     NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
@@ -94,11 +95,20 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
 
     //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
-    //NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ShooterInReversed"),
-    //                                                                   NamedCommands.getCommand("ArmDown"), 
-    //                                                                   new WaitCommand(1.0),
-    //                                                                   NamedCommands.getCommand("DisableArmMotor"), 
-    //                                                                   NamedCommands.getCommand("ShooterInHalt")));
+    NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"), 
+                                                                            new WaitCommand(2.0),
+                                                                            NamedCommands.getCommand("DisableArmMotor")));
+    NamedCommands.registerCommand("DropArmWithIntakeReversed",new SequentialCommandGroup(NamedCommands.getCommand("ShooterInReversed"),
+                                                                       NamedCommands.getCommand("ArmDown"), 
+                                                                       new WaitCommand(2.0),
+                                                                       NamedCommands.getCommand("DisableArmMotor"), 
+                                                                       NamedCommands.getCommand("ShooterInHalt")));
+    NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("EnableArmMotor"),
+                                                                              NamedCommands.getCommand("ArmMid"), 
+                                                                              new WaitCommand(1.0),
+                                                                              NamedCommands.getCommand("ArmDown"),
+                                                                              new WaitCommand(0.5),
+                                                                              NamedCommands.getCommand("DisableArmMotor")));   
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
@@ -108,9 +118,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
                                                                                   new WaitCommand(0.5), 
                                                                                   NamedCommands.getCommand("ShooterOutHalt")));
-    NamedCommands.registerCommand("ShooterToggleCommand", new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutCommand"),
-                                                                                  new WaitCommand(0.5),
-                                                                                  NamedCommands.getCommand("ShooterInCommand")));
+    //NamedCommands.registerCommand("ShooterToggleCommand", new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutCommand"),
+    //                                                                              new WaitCommand(0.5),
+    //                                                                              NamedCommands.getCommand("ShooterInCommand")));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
@@ -133,8 +143,8 @@ public class RobotContainer {
     }
     if (ArmConstants.kArmCommandsFromDashboard) {
       //SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
-      SmartDashboard.putData("ArmDown", NamedCommands.getCommand("ArmDown"));
-      SmartDashboard.putData("ArmMid", NamedCommands.getCommand("ArmMid"));
+      SmartDashboard.putData("DropArm", NamedCommands.getCommand("DropArm"));
+      SmartDashboard.putData("JostleArm", NamedCommands.getCommand("JostleArm"));
       SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {
@@ -170,19 +180,22 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
 
     // MANIPULATOR XBOX Controller
+    //  Shooting Related
     manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+    //manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
+    //  Intake Related
     manipulatorCommandXboxController.a().whileTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
     manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("IntakeOut"));
     manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    // Climber Related
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
-    manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
-    //manipulatorCommandXboxController.b().onTrue(NamedCommands.getCommand("ArmMid"));
-    //manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("ArmDown"));
+
+    //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
 
   }
 

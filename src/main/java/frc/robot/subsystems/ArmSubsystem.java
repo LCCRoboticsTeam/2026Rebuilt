@@ -21,7 +21,7 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
-import com.revrobotics.spark.SparkLimitSwitch;
+//import com.revrobotics.spark.SparkLimitSwitch;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -151,11 +151,19 @@ public class ArmSubsystem extends SubsystemBase {
   public Command DisableArmMotorCommand() {
     return runOnce(() -> DisableArmMotor());  
   }
+  
+  public Command EnableArmMotorCommand() {
+    return runOnce(() -> EnableArmMotor());  
+  }
 
   public void DisableArmMotor() {
     motorStopped=true;
     motor.disable();
     setArmState(armState.UNKNOWN);
+  }
+
+  public void EnableArmMotor() {
+    motorStopped=false;
   }
 
   public armState getArmState() {
