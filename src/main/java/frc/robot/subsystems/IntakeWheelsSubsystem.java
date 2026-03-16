@@ -83,6 +83,10 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     return runOnce(() -> setTargetVelocity(IntakeConstants.kIntakeInTargetVelocity));
   }
 
+  public Command IntakeWheelsInSlowCommand() {
+    return runOnce(() -> setTargetVelocity(IntakeConstants.kIntakeInSlowTargetVelocity));
+  }
+
   public Command IntakeWheelsOutCommand() {
     return runOnce(() -> setTargetVelocity(IntakeConstants.kIntakeOutTargetVelocity));
   }

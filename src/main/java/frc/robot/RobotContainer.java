@@ -71,6 +71,7 @@ public class RobotContainer {
     // Register Named Commands
     //   These are simple commands that are directly generated from the subsystem itself
     NamedCommands.registerCommand("IntakeIn", intakeWheelsSubsystem.IntakeWheelsInCommand());
+    NamedCommands.registerCommand("IntakeInSlow", intakeWheelsSubsystem.IntakeWheelsInSlowCommand());
     NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
     NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
     //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
@@ -96,11 +97,11 @@ public class RobotContainer {
 
     //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
     NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"), 
-                                                                            new WaitCommand(2.0),
+                                                                            new WaitCommand(1.0),
                                                                             NamedCommands.getCommand("DisableArmMotor")));
     NamedCommands.registerCommand("DropArmWithIntakeReversed",new SequentialCommandGroup(NamedCommands.getCommand("ShooterInReversed"),
                                                                        NamedCommands.getCommand("ArmDown"), 
-                                                                       new WaitCommand(2.0),
+                                                                       new WaitCommand(1.0),
                                                                        NamedCommands.getCommand("DisableArmMotor"), 
                                                                        NamedCommands.getCommand("ShooterInHalt")));
     NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("EnableArmMotor"),
@@ -109,6 +110,14 @@ public class RobotContainer {
                                                                               NamedCommands.getCommand("ArmDown"),
                                                                               new WaitCommand(0.5),
                                                                               NamedCommands.getCommand("DisableArmMotor")));   
+    NamedCommands.registerCommand("JostleArmWithIntakeInSlow",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+                                                                              NamedCommands.getCommand("EnableArmMotor"),
+                                                                              NamedCommands.getCommand("ArmMid"), 
+                                                                              new WaitCommand(1.0),
+                                                                              NamedCommands.getCommand("IntakeHalt"),
+                                                                              NamedCommands.getCommand("ArmDown"),
+                                                                              new WaitCommand(0.5),
+                                                                              NamedCommands.getCommand("DisableArmMotor")));                                                                  
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
@@ -145,6 +154,7 @@ public class RobotContainer {
       //SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
       SmartDashboard.putData("DropArm", NamedCommands.getCommand("DropArm"));
       SmartDashboard.putData("JostleArm", NamedCommands.getCommand("JostleArm"));
+      SmartDashboard.putData("JostleArmWithIntakeInSlow", NamedCommands.getCommand("JostleArmWithIntakeInSlow"));
       SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {

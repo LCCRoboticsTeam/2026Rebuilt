@@ -164,6 +164,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void EnableArmMotor() {
     motorStopped=false;
+    //setArmState(armState.ARM_MID_POSITION);
   }
 
   public armState getArmState() {
@@ -207,9 +208,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
   
     // Display encoder position and velocity
+    SmartDashboard.putNumber("ARM Target Position", targetPosition);
     SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
     SmartDashboard.putNumber("ARM Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("ARM DutyCycle", motor.getAppliedOutput());
+    SmartDashboard.putNumber("ARM Speed", motor.get());
 
     //SparkLimitSwitch forwardLimitSwitch = leftMotor.getForwardLimitSwitch();
     //SmartDashboard.putBoolean("ELEV Left Limit FWD", forwardLimitSwitch.isPressed());

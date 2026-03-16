@@ -8,66 +8,9 @@
         "layouts": [],
         "containers": [
           {
-            "title": "ClimberCam",
-            "x": 896.0,
-            "y": 0.0,
-            "width": 640.0,
-            "height": 512.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/USB Camera 0",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "ReefCam",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 640.0,
-            "height": 512.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/USB Camera 1",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "Reef Detected",
-            "x": 640.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Boolean Box",
-            "properties": {
-              "topic": "/SmartDashboard/ENDE Is Reef Detected",
-              "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
-            }
-          },
-          {
-            "title": "Reef Dist (mm)",
-            "x": 768.0,
-            "y": 0.0,
-            "width": 128.0,
-            "height": 128.0,
-            "type": "Text Display",
-            "properties": {
-              "topic": "/SmartDashboard/ENDE LCReefside Dist (mm)",
-              "period": 0.06,
-              "data_type": "double",
-              "show_submit_button": false
-            }
-          },
-          {
             "title": "Auto Chooser",
-            "x": 640.0,
-            "y": 256.0,
+            "x": 512.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 128.0,
             "type": "ComboBox Chooser",
@@ -79,8 +22,8 @@
           },
           {
             "title": "Reset Gyro Heading",
-            "x": 640.0,
-            "y": 384.0,
+            "x": 896.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -92,68 +35,59 @@
             }
           },
           {
-            "title": "Reverse Intake",
-            "x": 640.0,
-            "y": 128.0,
+            "title": "Gyro Angle: ",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Gyro Angle: ",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "DropArm",
+            "x": 512.0,
+            "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
             "properties": {
-              "topic": "/SmartDashboard/Reverse Intake",
+              "topic": "/SmartDashboard/DropArm",
               "period": 0.06,
               "show_type": true,
               "maximize_button_space": false
             }
-          }
-        ]
-      }
-    },
-    {
-      "name": "PhotonVision Cams",
-      "grid_layout": {
-        "layouts": [],
-        "containers": [
-          {
-            "title": "photonvision_Port_1182_Output_MJPEG_Server",
-            "x": 896.0,
-            "y": 0.0,
-            "width": 640.0,
-            "height": 640.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/photonvision_Port_1182_Output_MJPEG_Server",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
           },
           {
-            "title": "photonvision_Port_1184_Output_MJPEG_Server",
-            "x": 0.0,
-            "y": 0.0,
-            "width": 768.0,
-            "height": 640.0,
-            "type": "Camera Stream",
-            "properties": {
-              "topic": "/CameraPublisher/photonvision_Port_1184_Output_MJPEG_Server",
-              "period": 0.06,
-              "rotation_turns": 0
-            }
-          },
-          {
-            "title": "Is Tag Detected",
+            "title": "JostleArm",
             "x": 768.0,
-            "y": 256.0,
-            "width": 128.0,
-            "height": 256.0,
-            "type": "Boolean Box",
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
             "properties": {
-              "topic": "/SmartDashboard/Is Tag Detected",
+              "topic": "/SmartDashboard/JostleArm",
               "period": 0.06,
-              "data_type": "boolean",
-              "true_color": 4283215696,
-              "false_color": 4294198070,
-              "true_icon": "None",
-              "false_icon": "None"
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "DisableArmMotor",
+            "x": 1024.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/DisableArmMotor",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
             }
           }
         ]
@@ -166,7 +100,7 @@
         "containers": [
           {
             "title": "IntakeHalt",
-            "x": 512.0,
+            "x": 256.0,
             "y": 0.0,
             "width": 256.0,
             "height": 128.0,
@@ -180,7 +114,7 @@
           },
           {
             "title": "IntakeIn",
-            "x": 256.0,
+            "x": 0.0,
             "y": 0.0,
             "width": 256.0,
             "height": 128.0,
@@ -194,7 +128,7 @@
           },
           {
             "title": "IntakeOut",
-            "x": 768.0,
+            "x": 512.0,
             "y": 0.0,
             "width": 256.0,
             "height": 128.0,
@@ -208,8 +142,8 @@
           },
           {
             "title": "ShooterInForward",
-            "x": 256.0,
-            "y": 256.0,
+            "x": 0.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -222,8 +156,8 @@
           },
           {
             "title": "ShooterOutForward",
-            "x": 256.0,
-            "y": 384.0,
+            "x": 0.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -236,8 +170,8 @@
           },
           {
             "title": "ShooterInReversed",
-            "x": 768.0,
-            "y": 256.0,
+            "x": 512.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -250,8 +184,8 @@
           },
           {
             "title": "ShooterOutReversed",
-            "x": 768.0,
-            "y": 384.0,
+            "x": 512.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -264,8 +198,8 @@
           },
           {
             "title": "ShooterOutHalt",
-            "x": 512.0,
-            "y": 384.0,
+            "x": 256.0,
+            "y": 256.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -278,8 +212,8 @@
           },
           {
             "title": "ShooterInHalt",
-            "x": 512.0,
-            "y": 256.0,
+            "x": 256.0,
+            "y": 128.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Command",
@@ -292,8 +226,8 @@
           },
           {
             "title": "Gyro Angle: ",
-            "x": 1024.0,
-            "y": 128.0,
+            "x": 896.0,
+            "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -307,7 +241,7 @@
           {
             "title": "Intake Target Velocity",
             "x": 1280.0,
-            "y": 128.0,
+            "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -320,8 +254,8 @@
           },
           {
             "title": "Intake Actual Velocity",
-            "x": 1280.0,
-            "y": 256.0,
+            "x": 1152.0,
+            "y": 0.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -335,8 +269,8 @@
           {
             "title": "Shooter In DutyCycle",
             "x": 0.0,
-            "y": 512.0,
-            "width": 128.0,
+            "y": 384.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -348,8 +282,8 @@
           },
           {
             "title": "Shooter In Amps",
-            "x": 128.0,
-            "y": 512.0,
+            "x": 256.0,
+            "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -362,8 +296,8 @@
           },
           {
             "title": "Shooter In Actual Vel",
-            "x": 384.0,
-            "y": 512.0,
+            "x": 512.0,
+            "y": 384.0,
             "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
@@ -376,9 +310,9 @@
           },
           {
             "title": "ARM Actual Position",
-            "x": 1280.0,
-            "y": 384.0,
-            "width": 128.0,
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -390,8 +324,8 @@
           },
           {
             "title": "ARM Amps",
-            "x": 1152.0,
-            "y": 512.0,
+            "x": 896.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -404,8 +338,8 @@
           },
           {
             "title": "ARM DutyCycle",
-            "x": 1280.0,
-            "y": 512.0,
+            "x": 1024.0,
+            "y": 384.0,
             "width": 128.0,
             "height": 128.0,
             "type": "Text Display",
@@ -418,9 +352,9 @@
           },
           {
             "title": "ARM Target Position",
-            "x": 1152.0,
-            "y": 384.0,
-            "width": 128.0,
+            "x": 896.0,
+            "y": 256.0,
+            "width": 256.0,
             "height": 128.0,
             "type": "Text Display",
             "properties": {
@@ -428,6 +362,76 @@
               "period": 0.06,
               "data_type": "double",
               "show_submit_button": true
+            }
+          },
+          {
+            "title": "CLMB Actual Pos",
+            "x": 896.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/CLMB Actual Pos",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "JostleArm",
+            "x": 896.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/JostleArm",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "ARM Speed",
+            "x": 1152.0,
+            "y": 384.0,
+            "width": 128.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/ARM Speed",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "DropArm",
+            "x": 640.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/DropArm",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
+            }
+          },
+          {
+            "title": "JostleArmWithIntakeInSlow",
+            "x": 1152.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/JostleArmWithIntakeInSlow",
+              "period": 0.06,
+              "show_type": true,
+              "maximize_button_space": false
             }
           }
         ]

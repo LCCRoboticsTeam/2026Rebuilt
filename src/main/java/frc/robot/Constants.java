@@ -189,6 +189,7 @@ public final class Constants {
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
     public static final double kIntakeInTargetVelocity = 3600;//was 2500
+    public static final double kIntakeInSlowTargetVelocity = 50;
     public static final double kIntakeOutTargetVelocity = -900;
 
   }
@@ -213,7 +214,7 @@ public final class Constants {
   public enum armState {
     UNKNOWN,
     ARM_UP_POSITION(0),
-    ARM_MID_POSITION(9.0),
+    ARM_MID_POSITION(11.5),
     ARM_DOWN_POSITION(11.5);
 
     private double armPosition;
