@@ -164,7 +164,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void EnableArmMotor() {
     motorStopped=false;
-    //setArmState(armState.ARM_MID_POSITION);
   }
 
   public armState getArmState() {

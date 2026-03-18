@@ -74,7 +74,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("IntakeInSlow", intakeWheelsSubsystem.IntakeWheelsInSlowCommand());
     NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
     NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
-    //NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
+    NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
     NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
     NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
     NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
@@ -94,30 +94,23 @@ public class RobotContainer {
     NamedCommands.registerCommand("ClimbDown", new MoveClimberDownCommand(climberSubsystem));
     NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
     NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
+    NamedCommands.registerCommand("SwerveRotateCommandRight", new SwerveRotateCommand(driveSubsystem, true, DriveConstants.kSwerveRotateSpeed));
+    NamedCommands.registerCommand("SwerveRotateCommandLeft", new SwerveRotateCommand(driveSubsystem, false, DriveConstants.kSwerveRotateSpeed));
 
-    //NamedCommands.registerCommand("JostleArm", new JostleArmCommand(armSubsystem));
     NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"), 
                                                                             new WaitCommand(1.0),
                                                                             NamedCommands.getCommand("DisableArmMotor")));
-    NamedCommands.registerCommand("DropArmWithIntakeReversed",new SequentialCommandGroup(NamedCommands.getCommand("ShooterInReversed"),
-                                                                       NamedCommands.getCommand("ArmDown"), 
-                                                                       new WaitCommand(1.0),
-                                                                       NamedCommands.getCommand("DisableArmMotor"), 
-                                                                       NamedCommands.getCommand("ShooterInHalt")));
-    NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("EnableArmMotor"),
-                                                                              NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(1.0),
-                                                                              NamedCommands.getCommand("ArmDown"),
-                                                                              new WaitCommand(0.5),
-                                                                              NamedCommands.getCommand("DisableArmMotor")));   
-    NamedCommands.registerCommand("JostleArmWithIntakeInSlow",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+    NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
                                                                               new WaitCommand(1.0),
                                                                               NamedCommands.getCommand("IntakeHalt"),
                                                                               NamedCommands.getCommand("ArmDown"),
                                                                               new WaitCommand(0.5),
-                                                                              NamedCommands.getCommand("DisableArmMotor")));                                                                  
+                                                                              NamedCommands.getCommand("DisableArmMotor")));
+    NamedCommands.registerCommand("ArmUp",new SequentialCommandGroup(NamedCommands.getCommand("ArmUp"), 
+                                                                            new WaitCommand(1.0),
+                                                                            NamedCommands.getCommand("DisableArmMotor")));                                                                  
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
@@ -151,10 +144,9 @@ public class RobotContainer {
       SmartDashboard.putData("IntakeHalt", NamedCommands.getCommand("IntakeHalt"));
     }
     if (ArmConstants.kArmCommandsFromDashboard) {
-      //SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
       SmartDashboard.putData("DropArm", NamedCommands.getCommand("DropArm"));
       SmartDashboard.putData("JostleArm", NamedCommands.getCommand("JostleArm"));
-      SmartDashboard.putData("JostleArmWithIntakeInSlow", NamedCommands.getCommand("JostleArmWithIntakeInSlow"));
+      SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
       SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {
@@ -165,6 +157,10 @@ public class RobotContainer {
       SmartDashboard.putData("ShooterOutHalt", NamedCommands.getCommand("ShooterOutHalt"));
       SmartDashboard.putData("ShooterOutReversed", NamedCommands.getCommand("ShooterOutReversed"));
     }
+
+    //SmartDashboard.putData("SwerveRotateCommandRight", NamedCommands.getCommand("SwerveRotateCommandRight"));
+    //SmartDashboard.putData("SwerveRotateCommandLeft", NamedCommands.getCommand("SwerveRotateCommandLeft"));
+    
   }
 
   /**
@@ -188,6 +184,8 @@ public class RobotContainer {
     //   Note: Right stick and Left stick already mapped via SwerveGamepadDriveCommand() in earlier code
     driverCommandXboxController.rightBumper().whileTrue(NamedCommands.getCommand("SwerveSlideRight"));
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
+    //driverCommandXboxController.b().onTrue(NamedCommands.getCommand("SwerveRotateCommandRight"));
+    //driverCommandXboxController.x().onTrue(NamedCommands.getCommand("SwerveRotateCommandLeft"));
 
     // MANIPULATOR XBOX Controller
     //  Shooting Related

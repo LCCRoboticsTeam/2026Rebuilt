@@ -94,6 +94,7 @@ public final class Constants {
 
     public static final double kSwerveSlideSpeed = 0.15;
     public static final double kSwerveAutoAlignSlideSpeed = 0.15;  // Not as reliable if faster
+    public static final double kSwerveRotateSpeed = 0.3; // FIXME: Test this
 
     public static final double kSwerveBackupSpeed = 0.4;
     public static final double kSwerveRotateRightSpeed = 0.75;
@@ -213,7 +214,7 @@ public final class Constants {
 
   public enum armState {
     UNKNOWN,
-    ARM_UP_POSITION(0),
+    ARM_UP_POSITION(1.0),
     ARM_MID_POSITION(11.5),
     ARM_DOWN_POSITION(11.5);
 
