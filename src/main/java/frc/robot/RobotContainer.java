@@ -108,8 +108,9 @@ public class RobotContainer {
                                                                               NamedCommands.getCommand("ArmDown"),
                                                                               new WaitCommand(0.5),
                                                                               NamedCommands.getCommand("DisableArmMotor")));
-    NamedCommands.registerCommand("RaiseUp",new SequentialCommandGroup(NamedCommands.getCommand("ArmUp"), 
-                                                                            new WaitCommand(1.0),
+    NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+                                                                            NamedCommands.getCommand("ArmUp"), 
+                                                                            new WaitCommand(1.5),
                                                                             NamedCommands.getCommand("DisableArmMotor")));                                                                  
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
@@ -146,7 +147,7 @@ public class RobotContainer {
     if (ArmConstants.kArmCommandsFromDashboard) {
       SmartDashboard.putData("DropArm", NamedCommands.getCommand("DropArm"));
       SmartDashboard.putData("JostleArm", NamedCommands.getCommand("JostleArm"));
-      SmartDashboard.putData("ArmUp", NamedCommands.getCommand("ArmUp"));
+      SmartDashboard.putData("RaiseArm", NamedCommands.getCommand("RaiseArm"));
       SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
     }
     if (ShooterConstants.kShooterCommandsFromDashboard) {
@@ -198,14 +199,15 @@ public class RobotContainer {
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
-    manipulatorCommandXboxController.a().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
-    manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    manipulatorCommandXboxController.a().onTrue(new ConditionalCommand(NamedCommands.getCommand("IntakeHalt"), 
+                                                                      NamedCommands.getCommand("IntakeIn"), 
+                                                                      intakeWheelsSubsystem::areIntakeWheelsSpinning));
     manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
     manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     // Climber Related
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
-
+    // Arm Related
     manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
 
     //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));

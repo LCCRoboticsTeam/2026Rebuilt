@@ -99,6 +99,13 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     this.targetVelocity=targetVelocity;
   }
 
+  public boolean areIntakeWheelsSpinning() {
+    if (targetVelocity==0.0)
+      return false;
+    else
+      return true;      
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
