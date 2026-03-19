@@ -103,12 +103,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(1.0),
+                                                                              new WaitCommand(0.8),
                                                                               NamedCommands.getCommand("IntakeHalt"),
                                                                               NamedCommands.getCommand("ArmDown"),
                                                                               new WaitCommand(0.5),
                                                                               NamedCommands.getCommand("DisableArmMotor")));
-    NamedCommands.registerCommand("ArmUp",new SequentialCommandGroup(NamedCommands.getCommand("ArmUp"), 
+    NamedCommands.registerCommand("RaiseUp",new SequentialCommandGroup(NamedCommands.getCommand("ArmUp"), 
                                                                             new WaitCommand(1.0),
                                                                             NamedCommands.getCommand("DisableArmMotor")));                                                                  
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
@@ -184,6 +184,9 @@ public class RobotContainer {
     //   Note: Right stick and Left stick already mapped via SwerveGamepadDriveCommand() in earlier code
     driverCommandXboxController.rightBumper().whileTrue(NamedCommands.getCommand("SwerveSlideRight"));
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
+    // Arm Related
+    driverCommandXboxController.povDown().onTrue(NamedCommands.getCommand("DropArm"));
+    driverCommandXboxController.povUp().onTrue(NamedCommands.getCommand("ArmUp"));
     //driverCommandXboxController.b().onTrue(NamedCommands.getCommand("SwerveRotateCommandRight"));
     //driverCommandXboxController.x().onTrue(NamedCommands.getCommand("SwerveRotateCommandLeft"));
 
@@ -193,15 +196,17 @@ public class RobotContainer {
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
-    //manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
+    manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
-    manipulatorCommandXboxController.a().whileTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
+    manipulatorCommandXboxController.a().onTrue(NamedCommands.getCommand("IntakeIn")); // Hold button to keep intaking
     manipulatorCommandXboxController.a().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
-    manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("IntakeOut"));
+    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
     manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     // Climber Related
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
+
+    manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
 
     //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
 
