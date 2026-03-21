@@ -208,15 +208,16 @@ public final class Constants {
     public static final boolean kArmCommandsFromDashboard = true;
     public static final int kArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.15;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.10;
   }
 
   public enum armState {
     UNKNOWN,
+    ARM_RESET_POSITION(0.0),
     ARM_UP_POSITION(-1.0),
-    ARM_MID_POSITION(-8),
-    ARM_DOWN_POSITION(-8);
+    ARM_MID_POSITION(-9.5),
+    ARM_DOWN_POSITION(-10);
 
     private double armPosition;
     armState(double armPosition) {

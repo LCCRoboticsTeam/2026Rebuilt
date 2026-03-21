@@ -77,7 +77,7 @@ public class ArmSubsystem extends SubsystemBase {
     //SmartDashboard.putBoolean("Reverse Limit Enabled", m_reverseLimit.isLimitSwitchEnabled());
     
     targetPosition = 0;
-    aState=armState.ARM_UP_POSITION;
+    aState=armState.ARM_RESET_POSITION;
 
     /*
      * Configure the closed loop controller. We want to make sure we set the
@@ -186,6 +186,21 @@ public class ArmSubsystem extends SubsystemBase {
     encoder.setPosition(0);
   }
 
+  public void setIdleModeToCoast() {
+    motorConfig.idleMode(IdleMode.kCoast);
+  }
+
+  public void setIdleModeToBrake() {
+    motorConfig.idleMode(IdleMode.kBrake);
+  }
+
+  public boolean isArmMotorEnabled() {
+    if (motorStopped)
+      return false;
+    else
+      return true;      
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
@@ -212,6 +227,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ARM Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("ARM DutyCycle", motor.getAppliedOutput());
     SmartDashboard.putNumber("ARM Speed", motor.get());
+    SmartDashboard.putBoolean("ARM Active", isArmMotorEnabled());
 
     //SparkLimitSwitch forwardLimitSwitch = leftMotor.getForwardLimitSwitch();
     //SmartDashboard.putBoolean("ELEV Left Limit FWD", forwardLimitSwitch.isPressed());

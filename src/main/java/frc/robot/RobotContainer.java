@@ -98,20 +98,21 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveRotateCommandLeft", new SwerveRotateCommand(driveSubsystem, false, DriveConstants.kSwerveRotateSpeed));
 
     NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"), 
-                                                                            new WaitCommand(1.0),
+                                                                            new WaitCommand(0.8),
                                                                             NamedCommands.getCommand("DisableArmMotor")));
     NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(0.8),
+                                                                              new WaitCommand(0.4),
                                                                               NamedCommands.getCommand("IntakeHalt"),
                                                                               NamedCommands.getCommand("ArmDown"),
                                                                               new WaitCommand(0.5),
                                                                               NamedCommands.getCommand("DisableArmMotor")));
     NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
-                                                                            NamedCommands.getCommand("ArmUp"), 
-                                                                            new WaitCommand(1.5),
-                                                                            NamedCommands.getCommand("DisableArmMotor")));                                                                  
+                                                                             NamedCommands.getCommand("EnableArmMotor"),
+                                                                             NamedCommands.getCommand("ArmUp"), 
+                                                                             new WaitCommand(1.5),
+                                                                             NamedCommands.getCommand("DisableArmMotor")));                                                                  
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
@@ -187,7 +188,7 @@ public class RobotContainer {
     driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
     // Arm Related
     driverCommandXboxController.povDown().onTrue(NamedCommands.getCommand("DropArm"));
-    driverCommandXboxController.povUp().onTrue(NamedCommands.getCommand("ArmUp"));
+    driverCommandXboxController.povUp().onTrue(NamedCommands.getCommand("RaiseArm"));
     //driverCommandXboxController.b().onTrue(NamedCommands.getCommand("SwerveRotateCommandRight"));
     //driverCommandXboxController.x().onTrue(NamedCommands.getCommand("SwerveRotateCommandLeft"));
 
@@ -197,7 +198,7 @@ public class RobotContainer {
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
     manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
-    manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
+    //manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
     manipulatorCommandXboxController.a().onTrue(new ConditionalCommand(NamedCommands.getCommand("IntakeHalt"), 
                                                                       NamedCommands.getCommand("IntakeIn"), 

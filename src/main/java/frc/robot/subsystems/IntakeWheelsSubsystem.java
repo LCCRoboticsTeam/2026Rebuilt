@@ -128,6 +128,7 @@ public class IntakeWheelsSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("INTAKE Actual Velocity", m_sparkEncoder.getVelocity());
     SmartDashboard.putNumber("INTAKE Amps", m_intakeSpark.getOutputCurrent());
     SmartDashboard.putNumber("INTAKE DutyCycle", m_intakeSpark.getAppliedOutput());
+    SmartDashboard.putBoolean("INTAKE ON", areIntakeWheelsSpinning());
 
   }
 
