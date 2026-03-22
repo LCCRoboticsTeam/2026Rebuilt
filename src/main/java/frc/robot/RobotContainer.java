@@ -115,7 +115,8 @@ public class RobotContainer {
                                                                               new WaitCommand(0.6),
                                                                               NamedCommands.getCommand("IntakeHalt")));
 
-    NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"),
+    NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("IntakeHalt"),
+                                                                                  NamedCommands.getCommand("ArmDown"),
                                                                                   new WaitCommand(0.5),
                                                                                   NamedCommands.getCommand("DisableArmMotor")));
 
