@@ -151,9 +151,6 @@ public class RobotContainer {
     NamedCommands.registerCommand("StopShooterAndJostleArmDown", new ParallelCommandGroup(NamedCommands.getCommand("StopShooter"), 
                                                                                                NamedCommands.getCommand("JostleArmDown")));
 
-    //NamedCommands.registerCommand("ShooterToggleCommand", new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutCommand"),
-    //                                                                              new WaitCommand(0.5),
-    //                                                                              NamedCommands.getCommand("ShooterInCommand")));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
@@ -251,6 +248,9 @@ public class RobotContainer {
     manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
 
     //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
+    manipulatorCommandXboxController.rightBumper().onTrue(new ConditionalCommand(NamedCommands.getCommand("JostleArmDown"), 
+                                                                      NamedCommands.getCommand("JostleArmUp"), 
+                                                                      armSubsystem::isArmMotorEnabled));
 
   }
 
