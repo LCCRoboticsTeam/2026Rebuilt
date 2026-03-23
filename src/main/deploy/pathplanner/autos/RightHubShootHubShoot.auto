@@ -61,6 +61,12 @@
         {
           "type": "named",
           "data": {
+            "name": "JostleArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "StartShooterHigh"
           }
         },
