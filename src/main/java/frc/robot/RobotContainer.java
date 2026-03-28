@@ -103,21 +103,21 @@ public class RobotContainer {
     NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(0.6),
+                                                                              new WaitCommand(1.6),
                                                                               NamedCommands.getCommand("IntakeHalt"),
                                                                               NamedCommands.getCommand("ArmDown"),
-                                                                              new WaitCommand(0.5),
+                                                                              new WaitCommand(1.7),
                                                                               NamedCommands.getCommand("DisableArmMotor")));
 
     NamedCommands.registerCommand("JostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(0.6),
+                                                                              new WaitCommand(2),
                                                                               NamedCommands.getCommand("IntakeHalt")));
 
     NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("IntakeHalt"),
                                                                                   NamedCommands.getCommand("ArmDown"),
-                                                                                  new WaitCommand(0.5),
+                                                                                  new WaitCommand(1.7),
                                                                                   NamedCommands.getCommand("DisableArmMotor")));
 
     NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),

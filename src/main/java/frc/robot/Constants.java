@@ -209,19 +209,18 @@ public final class Constants {
     public static final int kLeftArmInCanID = 9;
     public static final int kRightArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.10;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.10;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.15;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.15;
   }
 
   public enum armState {
-    UNKNOWN,
     ARM_RESET_POSITION(0.0),
-    ARM_UP_POSITION(-1.0),
-    ARM_MID_POSITION(-9.5),
-    ARM_DOWN_POSITION(-10);
+    ARM_UP_POSITION(0),
+    ARM_MID_POSITION(10),
+    ARM_DOWN_POSITION(15);
 
     private double armPosition;
-    armState(double armPostion) {
+    armState(double armPosition) {
       this.armPosition = armPosition;
     }
     armState() {}

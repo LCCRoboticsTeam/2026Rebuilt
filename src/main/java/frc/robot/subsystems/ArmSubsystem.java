@@ -142,17 +142,17 @@ public class ArmSubsystem extends SubsystemBase {
 
   public Command SetArmUpCommand() {
     setArmState(armState.ARM_UP_POSITION);
-    return runOnce(() -> setTargetPosition(aState.getPosition()));
-  }
-
-  public Command SetArmDownCommand() {
-    setArmState(armState.ARM_DOWN_POSITION);
-    return runOnce(() -> setTargetPosition(aState.getPosition()));  
+    return runOnce(() -> setTargetPosition(0)); // Direct value since issue with using constant
   }
 
   public Command SetArmMidCommand() {
     setArmState(armState.ARM_MID_POSITION);
-    return runOnce(() -> setTargetPosition(aState.getPosition()));  
+    return runOnce(() -> setTargetPosition(6));  // Direct value since issue with using constant
+  }
+
+  public Command SetArmDownCommand() {
+    setArmState(armState.ARM_DOWN_POSITION);
+    return runOnce(() -> setTargetPosition(12));  // Direct value since issue with using constant
   }
 
   public Command DisableArmMotorCommand() {
@@ -166,7 +166,7 @@ public class ArmSubsystem extends SubsystemBase {
   public void DisableArmMotor() {
     motorStopped=true;
     leftMotor.disable();
-    setArmState(armState.UNKNOWN);
+    //setArmState(armState.UNKNOWN);
   }
 
   public void EnableArmMotor() {
