@@ -206,9 +206,10 @@ public final class Constants {
   public static final class ArmConstants {
     public static final boolean kArmTargetPositionFromDashboard = false;
     public static final boolean kArmCommandsFromDashboard = true;
-    public static final int kArmInCanID = 10;
+    public static final int kLeftArmInCanID = 9;
+    public static final int kRightArmInCanID = 10;
 
-    public static final double MOTOR_MIN_OUT_RANGE = -0.15;
+    public static final double MOTOR_MIN_OUT_RANGE = -0.10;
     public static final double MOTOR_MAX_OUT_RANGE = 0.10;
   }
 

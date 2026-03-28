@@ -34,6 +34,7 @@ public class ShooterInSubsystem extends SubsystemBase {
   private motorState mState;
 
   private Servo servo;
+  private double servoAngle;
   private boolean servoEnable = true;
 
   public ShooterInSubsystem() {
@@ -42,6 +43,7 @@ public class ShooterInSubsystem extends SubsystemBase {
     encoder = motor.getEncoder();
 
     servo = new Servo(ShooterConstants.kIntakeInServoChannel);
+    servoAngle=0;
 
     motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kCoast);
@@ -131,10 +133,15 @@ public class ShooterInSubsystem extends SubsystemBase {
       closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
         if (servoEnable) {
           if (targetVelocity!=0) {
-            servo.set(ShooterConstants.kServoSpeed);
+            if (servoAngle==180) {
+              servoAngle=0;
+            } else {
+              servoAngle=servoAngle+10;
+            }
           } else {
-            servo.set(0);
+            servoAngle=0;
           }
+        servo.setAngle(servoAngle);
         }
       }
     else {

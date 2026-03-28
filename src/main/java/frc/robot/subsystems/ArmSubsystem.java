@@ -15,22 +15,24 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkClosedLoopController;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 //import com.revrobotics.spark.SparkLimitSwitch;
 
 public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  private SparkFlex motor;
-  private SparkFlexConfig motorConfig;
-  private SparkClosedLoopController closedLoopController;
-  private RelativeEncoder encoder;
+  private SparkMax leftMotor;
+  private SparkMaxConfig leftMotorConfig;
+  private SparkClosedLoopController leftClosedLoopController;
+  private RelativeEncoder leftEncoder;
   //private SparkLimitSwitch m_forwardLimit;
   //private SparkLimitSwitch m_reverseLimit;
+
+  private SparkMax rightMotor;
 
   private armState aState;
   private double targetPosition;
@@ -44,19 +46,19 @@ public class ArmSubsystem extends SubsystemBase {
      * Initialize the SPARK MAX and get its encoder and closed loop controller
      * objects for later use.
      */
-    motor = new SparkFlex(ArmConstants.kArmInCanID, MotorType.kBrushless);
-    closedLoopController = motor.getClosedLoopController();
-    encoder = motor.getEncoder();
-    encoder.setPosition(0);
+    leftMotor = new SparkMax(ArmConstants.kLeftArmInCanID, MotorType.kBrushless);
+    leftClosedLoopController = leftMotor.getClosedLoopController();
+    leftEncoder = leftMotor.getEncoder();
+    leftEncoder.setPosition(0);
 
      /*
      * Create a new SPARK MAX configuration object. This will store the
      * configuration parameters for the SPARK MAX that we will set below.
      */
-    motorConfig = new SparkFlexConfig();
+    leftMotorConfig = new SparkMaxConfig();
 
     // This sets default idel mode to brake mode
-    motorConfig.idleMode(IdleMode.kCoast);  
+    leftMotorConfig.idleMode(IdleMode.kCoast);  
 
     /*
      * Configure the encoder. For this specific example, we are using the
@@ -64,8 +66,8 @@ public class ArmSubsystem extends SubsystemBase {
      * needed, we can adjust values like the position or velocity conversion
      * factors.
      */
-    motorConfig.encoder
-        .positionConversionFactor(1)
+    leftMotorConfig.encoder
+        .positionConversionFactor(3)
         .velocityConversionFactor(1);
 
     //m_forwardLimit = leftMotor.getForwardLimitSwitch();
@@ -83,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
      * Configure the closed loop controller. We want to make sure we set the
      * feedback sensor as the primary encoder.
      */
-    motorConfig.closedLoop
+    leftMotorConfig.closedLoop
         .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
         // Set PID values for position control. We don't need to pass a closed loop
         // slot, as it will default to slot 0.
@@ -110,8 +112,13 @@ public class ArmSubsystem extends SubsystemBase {
      * the SPARK MAX loses power. This is useful for power cycles that may occur
      * mid-operation.
      */
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    leftMotor.configure(leftMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
+    // Right Motor is the follower
+    rightMotor = new SparkMax(ArmConstants.kRightArmInCanID, MotorType.kBrushless);
+
+    rightMotor.configure(leftMotorConfig.follow(leftMotor, true), ResetMode.kResetSafeParameters, 
+      PersistMode.kNoPersistParameters);
 
     motorStopped=false;
     // Initialize dashboard values
@@ -158,7 +165,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void DisableArmMotor() {
     motorStopped=true;
-    motor.disable();
+    leftMotor.disable();
     setArmState(armState.UNKNOWN);
   }
 
@@ -179,19 +186,19 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getArmActualPosition() {
-   return encoder.getPosition();
+   return leftEncoder.getPosition();
   }
 
   public void resetArmPosition() {
-    encoder.setPosition(0);
+    leftEncoder.setPosition(0);
   }
 
   public void setIdleModeToCoast() {
-    motorConfig.idleMode(IdleMode.kCoast);
+    leftMotorConfig.idleMode(IdleMode.kCoast);
   }
 
   public void setIdleModeToBrake() {
-    motorConfig.idleMode(IdleMode.kBrake);
+    leftMotorConfig.idleMode(IdleMode.kBrake);
   }
 
   public boolean isArmMotorEnabled() {
@@ -218,15 +225,17 @@ public class ArmSubsystem extends SubsystemBase {
       targetPosition = SmartDashboard.getNumber("ARM Target Position", 0);
     }
     if (!motorStopped) {
-      closedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+      leftClosedLoopController.setSetpoint(targetPosition, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }
   
     // Display encoder position and velocity
     SmartDashboard.putNumber("ARM Target Position", targetPosition);
-    SmartDashboard.putNumber("ARM Actual Position", encoder.getPosition());
-    SmartDashboard.putNumber("ARM Amps", motor.getOutputCurrent());
-    SmartDashboard.putNumber("ARM DutyCycle", motor.getAppliedOutput());
-    SmartDashboard.putNumber("ARM Speed", motor.get());
+    SmartDashboard.putNumber("ARM Actual Position", leftEncoder.getPosition());
+    SmartDashboard.putNumber("ARM Left Amps", leftMotor.getOutputCurrent());
+    SmartDashboard.putNumber("ARM Left DutyCycle", leftMotor.getAppliedOutput());
+    SmartDashboard.putNumber("ARM Right Amps", rightMotor.getOutputCurrent());
+    SmartDashboard.putNumber("ARM Right DutyCycle", rightMotor.getAppliedOutput());
+    //SmartDashboard.putNumber("ARM Speed", leftMotor.get());
     SmartDashboard.putBoolean("ARM Active", isArmMotorEnabled());
 
     //SparkLimitSwitch forwardLimitSwitch = leftMotor.getForwardLimitSwitch();
@@ -237,7 +246,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getPosition () { 
-    return encoder.getPosition(); 
+    return leftEncoder.getPosition(); 
   }
 
 }

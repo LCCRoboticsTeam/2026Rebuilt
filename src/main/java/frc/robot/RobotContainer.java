@@ -232,8 +232,8 @@ public class RobotContainer {
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
 
     // These may be an improvement but need to test first
-    //manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
-    //manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
+    //manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
+    //manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
 
     //manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
