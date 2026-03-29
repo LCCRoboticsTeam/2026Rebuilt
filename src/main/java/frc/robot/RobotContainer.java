@@ -130,19 +130,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
                                                                                  new WaitCommand(0.5), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
-    NamedCommands.registerCommand("StartShooterAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
-                                                                                 new WaitCommand(0.5), 
-                                                                                 NamedCommands.getCommand("ShooterInForward"),
-                                                                                 new WaitCommand(0.5),
+    NamedCommands.registerCommand("StartShooterAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("StartShooter"), 
+                                                                                 new WaitCommand(1.5),
                                                                                  NamedCommands.getCommand("JostleArmUp")));
-
     NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardHigh"), 
                                                                                  new WaitCommand(0.75), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
-    NamedCommands.registerCommand("StartShooterHighAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardHigh"), 
-                                                                                 new WaitCommand(0.75), 
-                                                                                 NamedCommands.getCommand("ShooterInForward"),
-                                                                                 new WaitCommand(0.5),
+    NamedCommands.registerCommand("StartShooterHighAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("StartShooterHigh"), 
+                                                                                 new WaitCommand(1.5),
                                                                                  NamedCommands.getCommand("JostleArmUp")));
 
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
@@ -224,24 +219,20 @@ public class RobotContainer {
     manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
     manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
 
-    // These may be an improvement but need to test first
-    //manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooterAndJostleArmUp"));  // Hold button to keep shooting
-    //manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
-
     manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
 
     // These may be an improvement but need to test first
-    //manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
-    //manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
+    //manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
+    //manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
 
     //manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
     manipulatorCommandXboxController.a().onTrue(new ConditionalCommand(NamedCommands.getCommand("IntakeHalt"), 
                                                                       NamedCommands.getCommand("IntakeIn"), 
                                                                       intakeWheelsSubsystem::areIntakeWheelsSpinning));
-    manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
-    manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    //manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
+    //manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
     // Climber Related
     manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
     manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));

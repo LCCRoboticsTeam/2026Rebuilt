@@ -72,7 +72,7 @@ public class ShooterInSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     SmartDashboard.setDefaultNumber("Shooter In Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Shooter In Agitator Enable", false);
+    SmartDashboard.setDefaultBoolean("Shooter In Agitator Enable", true);
 
   }
 
@@ -126,7 +126,7 @@ public class ShooterInSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    servoEnable=SmartDashboard.getBoolean("Shooter In Agitator Enable", servoEnable);
+    servoEnable=SmartDashboard.getBoolean("Shooter In Agitator Enable", true);
 
     if (ShooterConstants.kMotorTargetVelocityFromDashboard) {
       double targetVelocity = SmartDashboard.getNumber("Shooter In Target Velocity", 0);
@@ -136,7 +136,7 @@ public class ShooterInSubsystem extends SubsystemBase {
             if (servoAngle==180) {
               servoAngle=0;
             } else {
-              servoAngle=servoAngle+10;
+              servoAngle=servoAngle+ShooterConstants.kServoAngleIncrement;
             }
           } else {
             servoAngle=0;
@@ -146,12 +146,12 @@ public class ShooterInSubsystem extends SubsystemBase {
       }
     else {
       closedLoopController.setSetpoint(motorTargetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-        if (true) {
+        if (servoEnable) {
           if (motorTargetVelocity!=0) {
             if (servoAngle==180) {
               servoAngle=0;
             } else {
-              servoAngle=servoAngle+2;
+              servoAngle=servoAngle+ShooterConstants.kServoAngleIncrement;
             }
           } else {
             servoAngle=0;

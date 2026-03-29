@@ -176,7 +176,7 @@ public final class Constants {
     public static final double kOutReversed = -900;
 
     public static final int kIntakeInServoChannel = 9;
-    public static final double kServoSpeed = 1.0; // Must be between -1.0 and 1.0, though seems >0.5
+    public static final int kServoAngleIncrement = 4; // Was 2 but a little slow
   } 
 
   // ---------------------------------------------
@@ -211,10 +211,16 @@ public final class Constants {
 
     public static final double MOTOR_MIN_OUT_RANGE = -0.15;
     public static final double MOTOR_MAX_OUT_RANGE = 0.15;
+
+    public static final double kArmResetPosition = 0.0;
+    public static final double kArmUpPosition = 0.0;
+    public static final double kArmMidPosition = 6.0;
+    public static final double kArmDownPosition = 12.0;
   }
 
   public enum armState {
-    ARM_RESET_POSITION(0.0),
+    // DO NOT CHANGE THESE, CHANGE THE VALUES A FEW LINES ABOVE
+    ARM_RESET_POSITION(0),
     ARM_UP_POSITION(0),
     ARM_MID_POSITION(10),
     ARM_DOWN_POSITION(15);
