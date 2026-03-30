@@ -60,13 +60,13 @@ public class ShooterOutSubsystem extends SubsystemBase {
       .outputRange(ShooterConstants.kMotorOutMinOutRange, ShooterConstants.kMotorOutMaxOutRange, ClosedLoopSlot.kSlot1)
       .feedForward
         .kV(12.0/5767,ClosedLoopSlot.kSlot1);
-    motorConfig.closedLoopRampRate(0.75);
-    // motorConfig.smartCurrentLimit(40);
-
-    // motorConfig.secondaryCurrentLimit(60);
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-
     
+    motorConfig.closedLoopRampRate(0.75);
+
+    //motorConfig.smartCurrentLimit(40);
+    //motorConfig.secondaryCurrentLimit(60);
+
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
   
     SmartDashboard.setDefaultNumber("Shooter Out Target Velocity", 0);
   }
