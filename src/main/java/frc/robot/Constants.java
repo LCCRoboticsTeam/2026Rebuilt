@@ -215,7 +215,7 @@ public final class Constants {
     public static final double kArmResetPosition = 0.0;
     public static final double kArmUpPosition = 0.0;
     public static final double kArmMidPosition = 6.0;
-    public static final double kArmDownPosition = 12.0;
+    public static final double kArmDownPosition = 14;
   }
 
   public enum armState {

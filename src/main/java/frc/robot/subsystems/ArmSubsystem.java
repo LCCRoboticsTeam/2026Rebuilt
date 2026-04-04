@@ -58,7 +58,7 @@ public class ArmSubsystem extends SubsystemBase {
     leftMotorConfig = new SparkMaxConfig();
 
     // This sets default idel mode to brake mode
-    leftMotorConfig.idleMode(IdleMode.kCoast);  
+    leftMotorConfig.idleMode(IdleMode.kBrake);
 
     /*
      * Configure the encoder. For this specific example, we are using the
@@ -206,6 +206,13 @@ public class ArmSubsystem extends SubsystemBase {
       return false;
     else
       return true;      
+  }
+
+  public boolean isArmDown() {
+    if (getArmState()==armState.ARM_DOWN_POSITION)
+      return true;
+    else
+      return false;      
   }
 
   /**

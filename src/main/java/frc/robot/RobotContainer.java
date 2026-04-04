@@ -58,7 +58,7 @@ public class RobotContainer {
 
   // Cameras and Vision
   //UsbCamera hoppersideUsbCamera = CameraServer.startAutomaticCapture(1);
-  //UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
+  UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
@@ -97,9 +97,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("SwerveRotateCommandRight", new SwerveRotateCommand(driveSubsystem, true, DriveConstants.kSwerveRotateSpeed));
     NamedCommands.registerCommand("SwerveRotateCommandLeft", new SwerveRotateCommand(driveSubsystem, false, DriveConstants.kSwerveRotateSpeed));
 
-    NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown"), 
-                                                                            new WaitCommand(0.8),
-                                                                            NamedCommands.getCommand("DisableArmMotor")));
+    NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown")));
     NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
@@ -116,9 +114,7 @@ public class RobotContainer {
                                                                               NamedCommands.getCommand("IntakeHalt")));
 
     NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("IntakeHalt"),
-                                                                                  NamedCommands.getCommand("ArmDown"),
-                                                                                  new WaitCommand(1),
-                                                                                  NamedCommands.getCommand("DisableArmMotor")));
+                                                                                  NamedCommands.getCommand("ArmDown")));
 
     NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                              NamedCommands.getCommand("EnableArmMotor"),
@@ -134,10 +130,10 @@ public class RobotContainer {
                                                                                  new WaitCommand(1.5),
                                                                                  NamedCommands.getCommand("JostleArmUp")));
     NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardHigh"), 
-                                                                                 new WaitCommand(0.75), 
+                                                                                 new WaitCommand(1.0), 
                                                                                  NamedCommands.getCommand("ShooterInForward")));
     NamedCommands.registerCommand("StartShooterHighAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("StartShooterHigh"), 
-                                                                                 new WaitCommand(1.5),
+                                                                                 new WaitCommand(1),
                                                                                  NamedCommands.getCommand("JostleArmUp")));
 
     NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
@@ -223,8 +219,8 @@ public class RobotContainer {
     manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
 
     // These may be an improvement but need to test first
-    //manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
-    //manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
+    manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
 
     //manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
     //  Intake Related
@@ -240,9 +236,9 @@ public class RobotContainer {
     manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
 
     //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
-    manipulatorCommandXboxController.rightBumper().onTrue(new ConditionalCommand(NamedCommands.getCommand("JostleArmDown"), 
-                                                                      NamedCommands.getCommand("JostleArmUp"), 
-                                                                      armSubsystem::isArmMotorEnabled));
+    manipulatorCommandXboxController.rightBumper().onTrue(new ConditionalCommand(NamedCommands.getCommand("JostleArmUp"), 
+                                                                      NamedCommands.getCommand("JostleArmDown"), 
+                                                                      armSubsystem::isArmDown));
 
   }
 

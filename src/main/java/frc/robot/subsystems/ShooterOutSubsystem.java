@@ -54,7 +54,7 @@ public class ShooterOutSubsystem extends SubsystemBase {
       .i(0)
       .d(0)
       .outputRange(ShooterConstants.kMotorOutMinOutRange, ShooterConstants.kMotorOutMaxOutRange)
-      .p(0.0001, ClosedLoopSlot.kSlot1)
+      .p(0.00008, ClosedLoopSlot.kSlot1)
       .i(0,ClosedLoopSlot.kSlot1)
       .d(0,ClosedLoopSlot.kSlot1)
       .outputRange(ShooterConstants.kMotorOutMinOutRange, ShooterConstants.kMotorOutMaxOutRange, ClosedLoopSlot.kSlot1)
