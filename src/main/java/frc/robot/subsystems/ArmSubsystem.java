@@ -222,8 +222,9 @@ public class ArmSubsystem extends SubsystemBase {
    */
   public boolean exampleCondition() {
     // Query some boolean state, such as a digital sensor.
-    return false;
+    return true;
   }
+
 
   @Override
   public void periodic() {
@@ -244,6 +245,7 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ARM Right DutyCycle", rightMotor.getAppliedOutput());
     //SmartDashboard.putNumber("ARM Speed", leftMotor.get());
     SmartDashboard.putBoolean("ARM Active", isArmMotorEnabled());
+
 
     //SparkLimitSwitch forwardLimitSwitch = leftMotor.getForwardLimitSwitch();
     //SmartDashboard.putBoolean("ELEV Left Limit FWD", forwardLimitSwitch.isPressed());
