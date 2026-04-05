@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     // Need for Grapple Hook hardware client for LaserCAN
     CanBridge.runTCP();
 
-    PortForwarder.add(5800, "photonvision.local", 5800);
+    //PortForwarder.add(5800, "photonvision.local", 5800);
 
     // FIXME: Potental code to clear old entries from SmartDashboard
     SmartDashboard.getKeys().stream().map(SmartDashboard::getEntry).peek(NetworkTableEntry::clearPersistent)
@@ -42,8 +42,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer(this::isEnabled);
 
-    //FollowPathCommand.warmupCommand().schedule();
-    CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+    FollowPathCommand.warmupCommand().schedule();
+    //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
     //enableLiveWindowInTest(true);
   }
@@ -82,11 +82,11 @@ public class Robot extends TimedRobot {
      * = new MyAutoCommand(); break; case "Default Auto": default:
      * autonomousCommand = new ExampleCommand(); break; }
      */
-
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      m_autonomousCommand.schedule();
+      //CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 

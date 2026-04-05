@@ -1,0 +1,121 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftHubRotateToShoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooterHigh"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropArm"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooter"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftHubToMoveOut"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeIn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftMoveOut"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftNeutralRotate"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCenterIntakePart1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCenterIntakePart2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftCenterIntakePart3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftMoveIn"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeHault"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LeftComeback"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooterHighAndJostleArmUp"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooterAndJostleArmDown"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,12 +33,17 @@ public class ShooterInSubsystem extends SubsystemBase {
   private double motorTargetVelocity;
   private motorState mState;
 
-  //private double motorState;
+  private Servo servo;
+  private double servoAngle;
+  private boolean servoEnable = true;
 
   public ShooterInSubsystem() {
     motor = new SparkMax(ShooterConstants.kShooterInCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
     encoder = motor.getEncoder();
+
+    servo = new Servo(ShooterConstants.kIntakeInServoChannel);
+    servoAngle=0;
 
     motorConfig = new SparkMaxConfig();
     motorConfig.idleMode(IdleMode.kCoast);
@@ -66,8 +72,10 @@ public class ShooterInSubsystem extends SubsystemBase {
     motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
 
     SmartDashboard.setDefaultNumber("Shooter In Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Shooter In Reset Encoder", false);
+    SmartDashboard.setDefaultBoolean("Shooter In Agitator Enable", true);
+
   }
+
   /**
    * Example command factory method.
    *
@@ -118,19 +126,43 @@ public class ShooterInSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    servoEnable=SmartDashboard.getBoolean("Shooter In Agitator Enable", true);
+
     if (ShooterConstants.kMotorTargetVelocityFromDashboard) {
       double targetVelocity = SmartDashboard.getNumber("Shooter In Target Velocity", 0);
-        closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
-    }
+      closedLoopController.setSetpoint(targetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        if (servoEnable) {
+          if (targetVelocity!=0) {
+            if (servoAngle==180) {
+              servoAngle=0;
+            } else {
+              servoAngle=servoAngle+ShooterConstants.kServoAngleIncrement;
+            }
+          } else {
+            servoAngle=0;
+          }
+        servo.setAngle(servoAngle);
+        }
+      }
     else {
       closedLoopController.setSetpoint(motorTargetVelocity, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        if (servoEnable) {
+          if (motorTargetVelocity!=0) {
+            if (servoAngle==180) {
+              servoAngle=0;
+            } else {
+              servoAngle=servoAngle+ShooterConstants.kServoAngleIncrement;
+            }
+          } else {
+            servoAngle=0;
+          }
+        servo.setAngle(servoAngle);
+        }
     }
     SmartDashboard.putNumber("Shooter In Actual Vel", encoder.getVelocity());
     SmartDashboard.putNumber("Shooter In Amps", motor.getOutputCurrent());
     SmartDashboard.putNumber("Shooter In DutyCycle", motor.getAppliedOutput());
+
   }
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
+
 }

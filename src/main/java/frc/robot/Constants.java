@@ -55,7 +55,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3.75;  // Orig 4.8, 2024Crecendo it was 4.0, 2025Reefscape trying slower
+    public static final double kMaxSpeedMetersPerSecond = 3.5;  // Orig 4.8, 2024Crescendo 4.0, 2025Reefscape 3.75, 2026Rebuilt trying 2.5
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kDirectionalSlewRate = 4; // radians per second; was .6
@@ -63,9 +63,9 @@ public final class Constants {
     public static final double kRotationalSlewRate = 3; // percent per second (1 = 100%); was .9
 
     // Chassis configuration
-    public static final double kTrackWidth = Units.inchesToMeters(24.25);
+    public static final double kTrackWidth = Units.inchesToMeters(23.5); // 2025Reefscape 24.25
     // Distance between centers of right and left wheels on robot
-    public static final double kWheelBase = Units.inchesToMeters(24.25); 
+    public static final double kWheelBase = Units.inchesToMeters(23.5); // 2025Reefscape 24.25
     // Distance between front and back wheels on robot
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -90,10 +90,11 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 16;
     public static final int kRearRightTurningCanId = 18;
 
-    public static final boolean kGyroReversed = true;
+    public static final boolean kGyroReversed = true; // flase
 
     public static final double kSwerveSlideSpeed = 0.15;
     public static final double kSwerveAutoAlignSlideSpeed = 0.15;  // Not as reliable if faster
+    public static final double kSwerveRotateSpeed = 0.3; // FIXME: Test this
 
     public static final double kSwerveBackupSpeed = 0.4;
     public static final double kSwerveRotateRightSpeed = 0.75;
@@ -114,7 +115,7 @@ public final class Constants {
 
     // Calculations required for driving motor conversion factors and feed forward
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-    public static final double kWheelDiameterMeters = 0.0731; // was 0.0741; was 0.0762 for 2024 Crescendo (was 0.0762)
+    public static final double kWheelDiameterMeters = 0.0751; //was 0731 | was 0.0741; was 0.0762 for 2024 Crescendo (was 0.0762)
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
     // teeth on the bevel pinion
@@ -132,32 +133,108 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+// -------------------- CLIMBER --------------------
+  public final class ClimberConstants {
+    public static final int kClimberCanID = 8;
+    public static final int kClimberPositionUp = 60; // 68 is the absolute max
+    public static final int kClimberPositionDown = -2; // -2 is the absolute lowest 
+
+    public static final double kmaxOutRange = 0.5;
+    public static final double kminOutRange = -0.5;
+
+    public static final double kServoAngleToEnableRatchet = 0.0;
+    public static final double kServoAngleToDisableRatchet = 15.0;
+
+    public static final boolean kTargetPositionFromDashboard = false;
+    public static final boolean kServoAngleFromDashboard = false;
+  }
+  public enum ClimberState {
+    UNKNOWN,
+    CLIMBER_UP,
+    CLIMBER_DOWN
+  }
+  // ---------------------------------------------
+
+  // -------------------- SHOOTER --------------------
+
   public static final class ShooterConstants {
+    public static final boolean kMotorTargetVelocityFromDashboard = false;
+    public static final boolean kShooterCommandsFromDashboard = false;
     public static final int kShooterInCanID = 3;
     public static final int kShooterOutCanID = 4;
 
+    public static final double kMotorInMaxOutRange = 0.8;
+    public static final double kMotorInMinOutRange = -0.8;
+    public static final double kInForward = -4200;
+    public static final double kInReversed = 900;
+
+    public static final double kMotorOutMaxOutRange = 0.8;
+    public static final double kMotorOutMinOutRange = -0.8; 
+    public static final double kOutForwardLow = 3000;
+    public static final double kOutForwardHigh = 3600;
+    public static final double kOutReversed = -900;
+
+    public static final int kIntakeInServoChannel = 9;
+    public static final int kServoAngleIncrement = 4; // Was 2 but a little slow
+  } 
+
+  // ---------------------------------------------
+
+  // -------------------- INTAKE --------------------
+
   public static final class IntakeConstants {
-    public static final boolean kWheelTargetVelocityFromDashboard = true;
+    public static final boolean kWheelTargetVelocityFromDashboard = false;
+    public static final boolean kIntakeCommandsFromDashboard = false;
+    public static final int kShooterInCanID = 5;
     public static final double kIntakeWheelMaxOutRange = 0.8;
     public static final double kIntakeWheelMinOutRange = -0.8;
-  }
+    public static final double kIntakeInTargetVelocity = 3600;//was 2500
+    public static final double kIntakeInSlowTargetVelocity = 250;
+    public static final double kIntakeOutTargetVelocity = -900;
 
-  public static class MotorSpeedConstants {
-    public static final double CRAWL_FORWARD = 0.01;
-    public static final double WALK_FORWARD = 0.02;
-    public static final double RUN_FORWARD = 0.03;
-    public static final double CRAWL_BACKWARD = -0.01;
-    public static final double WALK_BACKWARD = -0.02;
-    public static final double RUN_BACKWARD = -0.03;
-
-    public static final double MOTOR_MIN_OUT_RANGE = -0.1;
-    public static final double MOTOR_MAX_OUT_RANGE = 0.1;
   }
+  // ---------------------------------------------
+
   public enum motorState {
     UNKNOWN,
     RUNNING,
     STOPPED;
   }
+
+// -------------------- ARM --------------------
+  public static final class ArmConstants {
+    public static final boolean kArmTargetPositionFromDashboard = false;
+    public static final boolean kArmCommandsFromDashboard = true;
+    public static final int kLeftArmInCanID = 9;
+    public static final int kRightArmInCanID = 10;
+
+    public static final double MOTOR_MIN_OUT_RANGE = -0.15;
+    public static final double MOTOR_MAX_OUT_RANGE = 0.15;
+
+    public static final double kArmResetPosition = 0.0;
+    public static final double kArmUpPosition = 0.0;
+    public static final double kArmMidPosition = 6.0;
+    public static final double kArmDownPosition = 14;
+  }
+
+  public enum armState {
+    // DO NOT CHANGE THESE, CHANGE THE VALUES A FEW LINES ABOVE
+    ARM_RESET_POSITION(0),
+    ARM_UP_POSITION(0),
+    ARM_MID_POSITION(10),
+    ARM_DOWN_POSITION(15);
+
+    private double armPosition;
+    armState(double armPosition) {
+      this.armPosition = armPosition;
+    }
+    armState() {}
+    public double getPosition() {
+      return armPosition;
+    }
+  }
+ // ---------------------------------------------
 
 }
 

@@ -14,19 +14,22 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class SwerveGamepadDriveCommand extends Command {
+public class SwerveRotateCommand extends Command {
 
   private final DriveSubsystem swerveDriveTrain;
-  private final DoubleSupplier xSpeedSupplier, ySpeedSupplier, rotateSpeedSupplier;
+  boolean rightDirection;
+  double rotateSpeed;
+  double initialHeading;
 
   /** Creates a new SwerveControllerDrive. */
-  public SwerveGamepadDriveCommand(DriveSubsystem swerveDriveTrain, DoubleSupplier ySpeedSupplier,
-      DoubleSupplier xSpeedSupplier, DoubleSupplier rotateSpeedSupplier,  
-      BooleanSupplier getLeftStickButton) {
+  public SwerveRotateCommand(DriveSubsystem swerveDriveTrain, boolean rightDirection, double rotateSpeed) {
     this.swerveDriveTrain = swerveDriveTrain;
-    this.ySpeedSupplier = ySpeedSupplier;
-    this.xSpeedSupplier = xSpeedSupplier;
-    this.rotateSpeedSupplier = rotateSpeedSupplier;
+    this.rotateSpeed = rotateSpeed;
+    if (rightDirection)
+      this.rotateSpeed = rotateSpeed;
+    else
+      this.rotateSpeed = -rotateSpeed;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(this.swerveDriveTrain);
   }
@@ -34,24 +37,19 @@ public class SwerveGamepadDriveCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // We DO NOT WANT THIS since this command is called first time after autonomous, entering teleop and will reset
-    // the gyro
-    //swerveDriveTrain.zeroHeading();
+    initialHeading=swerveDriveTrain.getHeading();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = xSpeedSupplier.getAsDouble();
-    double ySpeed = ySpeedSupplier.getAsDouble();
-    double rotateSpeed = rotateSpeedSupplier.getAsDouble();
-
     swerveDriveTrain.drive(
-                -MathUtil.applyDeadband(xSpeed, OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(ySpeed, OIConstants.kDriveDeadband),
+                0,
+                0,
                 -MathUtil.applyDeadband(rotateSpeed, OIConstants.kDriveDeadband),
-                true,
+                false, 
                 true);
+
   }
 
   // Called once the command ends or is interrupted.
@@ -63,7 +61,13 @@ public class SwerveGamepadDriveCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if ((initialHeading>0) && (swerveDriveTrain.getHeading()<0) ||
+        (initialHeading<0) && (swerveDriveTrain.getHeading()>0) || 
+        (initialHeading==0) && (swerveDriveTrain.getHeading()==0)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

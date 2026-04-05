@@ -39,42 +39,149 @@ import java.util.function.BooleanSupplier;
  */
 public class RobotContainer {
   // Subsystems defined here...
-  // private final DriveSubsystem driveSubsystem;
-  // private final IntakeWheelsSubsystem intakeWheelsSubsystem;
-  private final MotorSubsystem motorSubsystem;
+  private final DriveSubsystem driveSubsystem;
+  private final IntakeWheelsSubsystem intakeWheelsSubsystem = new IntakeWheelsSubsystem();
+  private final ArmSubsystem armSubsystem = new ArmSubsystem();
+  private final ShooterInSubsystem shooterInSubsystem = new ShooterInSubsystem();
+  private final ShooterOutSubsystem shooterOutSubsystem = new ShooterOutSubsystem();
+  private final ClimberSubsystem climberSubsystem = new ClimberSubsystem();
+  //private final GyroSubsystem gyroSubsystem = new GyroSubsystem();
 
   // The driver's controllers
   private final XboxController driverXboxController = new XboxController(OIConstants.kDriverControllerPort); 
   private final CommandXboxController driverCommandXboxController = new CommandXboxController(OIConstants.kDriverControllerPort);
-
-  //2025 REEFSCAPE - private final CommandXboxController manipulatorCommandXboxController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
-
+  private final CommandXboxController manipulatorCommandXboxController = new CommandXboxController(OIConstants.kManipulatorControllerPort);
   //2025 REEFSCAPE - private final CommandLaunchpadController commandLaunchpad = new CommandLaunchpadController(OIConstants.kLaunchpadControllerPort);
 
   // Dashboard - Choosers
-  //2025 REEFSCAPE - private final SendableChooser<Command> autoChooser;
-  //2025 REEFSCAPE - private final SendableChooser<Command> reefAlgaeChooser;
+  private final SendableChooser<Command> autoChooser;
+
+  // Cameras and Vision
+  //UsbCamera hoppersideUsbCamera = CameraServer.startAutomaticCapture(1);
+  UsbCamera frontsideUsbCamera = CameraServer.startAutomaticCapture(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer(BooleanSupplier isRobotEnabled) {
-    // driveSubsystem = new DriveSubsystem();
-    // intakeWheelsSubsystem = new IntakeWheelsSubsystem(20);
-    motorSubsystem = new MotorSubsystem();
+    driveSubsystem = new DriveSubsystem();
+
+    // We always start with CLIMBER_DOWN and the Ratchet disabled
+    climberSubsystem.setClimberState(ClimberState.CLIMBER_DOWN);
+    climberSubsystem.setServoAngle(ClimberConstants.kServoAngleToDisableRatchet);
+
+    // Register Named Commands
+    //   These are simple commands that are directly generated from the subsystem itself
+    NamedCommands.registerCommand("IntakeIn", intakeWheelsSubsystem.IntakeWheelsInCommand());
+    NamedCommands.registerCommand("IntakeInSlow", intakeWheelsSubsystem.IntakeWheelsInSlowCommand());
+    NamedCommands.registerCommand("IntakeOut", intakeWheelsSubsystem.IntakeWheelsOutCommand());
+    NamedCommands.registerCommand("IntakeHalt", intakeWheelsSubsystem.IntakeWheelsHaltCommand());
+    NamedCommands.registerCommand("ArmUp", armSubsystem.SetArmUpCommand());
+    NamedCommands.registerCommand("ArmDown", armSubsystem.SetArmDownCommand());
+    NamedCommands.registerCommand("ArmMid", armSubsystem.SetArmMidCommand());
+    NamedCommands.registerCommand("DisableArmMotor", armSubsystem.DisableArmMotorCommand());
+    NamedCommands.registerCommand("EnableArmMotor", armSubsystem.EnableArmMotorCommand());
+    NamedCommands.registerCommand("ShooterInForward",shooterInSubsystem.Forward());
+    NamedCommands.registerCommand("ShooterInHalt", shooterInSubsystem.Halt());
+    NamedCommands.registerCommand("ShooterInReversed", shooterInSubsystem.Reversed());
+    NamedCommands.registerCommand("ShooterInCommand", new ShooterInCommand(shooterInSubsystem));
+    NamedCommands.registerCommand("ShooterOutForward", shooterOutSubsystem.ForwardLow());
+    NamedCommands.registerCommand("ShooterOutForwardHigh", shooterOutSubsystem.ForwardHigh());
+    NamedCommands.registerCommand("ShooterOutHalt", shooterOutSubsystem.Halt());
+    NamedCommands.registerCommand("ShooterOutReversed", shooterOutSubsystem.Reversed());
+    NamedCommands.registerCommand("ShooterOutCommand", new ShooterOutCommand(shooterOutSubsystem));
+
+    //   These are class-based or more complex commands
+    NamedCommands.registerCommand("ClimbUp", new MoveClimberUpCommand(climberSubsystem));
+    NamedCommands.registerCommand("ClimbDown", new MoveClimberDownCommand(climberSubsystem));
+    NamedCommands.registerCommand("SwerveSlideRight", new SwerveSlideCommand(driveSubsystem, true, DriveConstants.kSwerveSlideSpeed));
+    NamedCommands.registerCommand("SwerveSlideLeft", new SwerveSlideCommand(driveSubsystem, false, DriveConstants.kSwerveSlideSpeed));
+    NamedCommands.registerCommand("SwerveRotateCommandRight", new SwerveRotateCommand(driveSubsystem, true, DriveConstants.kSwerveRotateSpeed));
+    NamedCommands.registerCommand("SwerveRotateCommandLeft", new SwerveRotateCommand(driveSubsystem, false, DriveConstants.kSwerveRotateSpeed));
+
+    NamedCommands.registerCommand("DropArm",new SequentialCommandGroup(NamedCommands.getCommand("ArmDown")));
+    NamedCommands.registerCommand("JostleArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+                                                                              NamedCommands.getCommand("EnableArmMotor"),
+                                                                              NamedCommands.getCommand("ArmMid"), 
+                                                                              new WaitCommand(1.6),
+                                                                              NamedCommands.getCommand("IntakeHalt"),
+                                                                              NamedCommands.getCommand("ArmDown"),
+                                                                              new WaitCommand(1.7),
+                                                                              NamedCommands.getCommand("DisableArmMotor")));
+
+    NamedCommands.registerCommand("JostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+                                                                              NamedCommands.getCommand("EnableArmMotor"),
+                                                                              NamedCommands.getCommand("ArmMid"), 
+                                                                              new WaitCommand(0.5),
+                                                                              NamedCommands.getCommand("IntakeHalt")));
+
+    NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("IntakeHalt"),
+                                                                                  NamedCommands.getCommand("ArmDown")));
+
+    NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
+                                                                             NamedCommands.getCommand("EnableArmMotor"),
+                                                                             NamedCommands.getCommand("ArmUp"), 
+                                                                             new WaitCommand(0.5),
+                                                                             NamedCommands.getCommand("IntakeHalt"),
+                                                                             new WaitCommand(0.5),
+                                                                             NamedCommands.getCommand("DisableArmMotor")));
+                                                                                                         
+    NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
+                                                                                 new WaitCommand(0.5), 
+                                                                                 NamedCommands.getCommand("ShooterInForward")));
+    NamedCommands.registerCommand("StartShooterAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("StartShooter"), 
+                                                                                 new WaitCommand(1.5),
+                                                                                 NamedCommands.getCommand("JostleArmUp")));
+    NamedCommands.registerCommand("StartShooterHigh",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForwardHigh"), 
+                                                                                 new WaitCommand(1.0), 
+                                                                                 NamedCommands.getCommand("ShooterInForward")));
+    NamedCommands.registerCommand("StartShooterHighAndJostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("StartShooterHigh"), 
+                                                                                 new WaitCommand(1),
+                                                                                 NamedCommands.getCommand("JostleArmUp")));
+
+    NamedCommands.registerCommand("StopShooter", new SequentialCommandGroup(NamedCommands.getCommand("ShooterInHalt"), 
+                                                                                  new WaitCommand(0.5), 
+                                                                                  NamedCommands.getCommand("ShooterOutHalt")));
+
+    NamedCommands.registerCommand("StopShooterAndJostleArmDown", new ParallelCommandGroup(NamedCommands.getCommand("StopShooter"), 
+                                                                                               NamedCommands.getCommand("JostleArmDown")));
+
+
+    // Build an auto chooser. This will use Commands.none() as the default option.
+    //autoChooser = AutoBuilder.buildAutoChooser("MoveOut2M");
+    autoChooser = AutoBuilder.buildAutoChooser("RightHubShoot");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the trigger bindings
-    // configureBindings();
+    configureBindings();
+
+    SmartDashboard.putData("Reset Gyro Heading", driveSubsystem.zeroHeadingCommand());
     
     // Configure default commands
-    // driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
-      // driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
-      // driverXboxController::getLeftStickButton));
+    driveSubsystem.setDefaultCommand(new SwerveGamepadDriveCommand(driveSubsystem, driverCommandXboxController::getLeftX,
+      driverCommandXboxController::getLeftY, driverCommandXboxController::getRightX,  
+      driverXboxController::getLeftStickButton));
+    if (IntakeConstants.kIntakeCommandsFromDashboard) {
+      SmartDashboard.putData("IntakeIn", NamedCommands.getCommand("IntakeIn"));
+      SmartDashboard.putData("IntakeOut", NamedCommands.getCommand("IntakeOut"));
+      SmartDashboard.putData("IntakeHalt", NamedCommands.getCommand("IntakeHalt"));
+    }
+    if (ArmConstants.kArmCommandsFromDashboard) {
+      SmartDashboard.putData("DropArm", NamedCommands.getCommand("DropArm"));
+      SmartDashboard.putData("JostleArm", NamedCommands.getCommand("JostleArm"));
+      SmartDashboard.putData("RaiseArm", NamedCommands.getCommand("RaiseArm"));
+      SmartDashboard.putData("DisableArmMotor", NamedCommands.getCommand("DisableArmMotor"));
+    }
+    if (ShooterConstants.kShooterCommandsFromDashboard) {
+      SmartDashboard.putData("ShooterInForward",NamedCommands.getCommand("ShooterInForward"));
+      SmartDashboard.putData("ShooterInHalt", NamedCommands.getCommand("ShooterInHalt"));
+      SmartDashboard.putData("ShooterInReversed", NamedCommands.getCommand("ShooterInReversed"));
+      SmartDashboard.putData("ShooterOutForward", NamedCommands.getCommand("ShooterOutForward"));
+      SmartDashboard.putData("ShooterOutHalt", NamedCommands.getCommand("ShooterOutHalt"));
+      SmartDashboard.putData("ShooterOutReversed", NamedCommands.getCommand("ShooterOutReversed"));
+    }
 
-    SmartDashboard.putData("Shooter In Forward",shooterInSubsystem.Forward());
-    SmartDashboard.putData("Shooter In Halt", shooterInSubsystem.Halt());
-    SmartDashboard.putData("Shooter In Reversed", shooterInSubsystem.Reversed());
-    SmartDashboard.putData("Shooter Out Forward", ShooterOutSubsystem.Forward());
-    SmartDashboard.putData("Shooter Out Halt", ShooterOutSubsystem.Halt());
-    SmartDashboard.putData("Shooter Out Reversed", ShooterOutSubsystem.Reversed());
+    //SmartDashboard.putData("SwerveRotateCommandRight", NamedCommands.getCommand("SwerveRotateCommandRight"));
+    //SmartDashboard.putData("SwerveRotateCommandLeft", NamedCommands.getCommand("SwerveRotateCommandLeft"));
+    
   }
 
   /**
@@ -96,6 +203,42 @@ public class RobotContainer {
 
     // DRIVER XBOX Controller
     //   Note: Right stick and Left stick already mapped via SwerveGamepadDriveCommand() in earlier code
+    driverCommandXboxController.rightBumper().whileTrue(NamedCommands.getCommand("SwerveSlideRight"));
+    driverCommandXboxController.leftBumper().whileTrue(NamedCommands.getCommand("SwerveSlideLeft"));
+    // Arm Related
+    driverCommandXboxController.povDown().onTrue(NamedCommands.getCommand("DropArm"));
+    driverCommandXboxController.povUp().onTrue(NamedCommands.getCommand("RaiseArm"));
+    //driverCommandXboxController.b().onTrue(NamedCommands.getCommand("SwerveRotateCommandRight"));
+    //driverCommandXboxController.x().onTrue(NamedCommands.getCommand("SwerveRotateCommandLeft"));
+
+    // MANIPULATOR XBOX Controller
+    //  Shooting Related
+    manipulatorCommandXboxController.y().whileTrue(NamedCommands.getCommand("StartShooter"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.y().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+
+    manipulatorCommandXboxController.b().whileTrue(NamedCommands.getCommand("StartShooterHigh"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.b().negate().onTrue(NamedCommands.getCommand("StopShooter"));
+
+    // These may be an improvement but need to test first
+    manipulatorCommandXboxController.x().whileTrue(NamedCommands.getCommand("StartShooterHighAndJostleArmUp"));  // Hold button to keep shooting
+    manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("StopShooterAndJostleArmDown"));
+
+    //manipulatorCommandXboxController.povUp().onTrue(NamedCommands.getCommand("JostleArm"));
+    //  Intake Related
+    manipulatorCommandXboxController.a().onTrue(new ConditionalCommand(NamedCommands.getCommand("IntakeHalt"), 
+                                                                      NamedCommands.getCommand("IntakeIn"), 
+                                                                      intakeWheelsSubsystem::areIntakeWheelsSpinning));
+    //manipulatorCommandXboxController.x().onTrue(NamedCommands.getCommand("IntakeOut"));
+    //manipulatorCommandXboxController.x().negate().onTrue(NamedCommands.getCommand("IntakeHalt"));
+    // Climber Related
+    manipulatorCommandXboxController.back().onTrue(NamedCommands.getCommand("ClimbUp"));
+    manipulatorCommandXboxController.start().onTrue(NamedCommands.getCommand("ClimbDown"));
+    // Arm Related
+    manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
+
+    //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
+    manipulatorCommandXboxController.rightBumper().onTrue(NamedCommands.getCommand("JostleArmUp"));
+    manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArmDown"));
 
   }
 
@@ -106,10 +249,13 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    return null;
+    // Do we need to program driveSubsystem to tell it which way the robot is facing?
+    // driveSubsystem.robotFacingDriveStation();
+    return autoChooser.getSelected();
+    //return null;
   }
 
   public void zeroHeading() {
-    // driveSubsystem.zeroHeading();
+    driveSubsystem.zeroHeading();
   }
 }

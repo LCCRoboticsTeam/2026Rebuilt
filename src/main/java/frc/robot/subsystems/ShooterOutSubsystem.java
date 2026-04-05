@@ -32,8 +32,6 @@ public class ShooterOutSubsystem extends SubsystemBase {
   private double motorTargetVelocity;
   private motorState mState;
 
-  //private double motorState;
-
   public ShooterOutSubsystem() {
     motor = new SparkMax(ShooterConstants.kShooterOutCanID, MotorType.kBrushless);
     closedLoopController = motor.getClosedLoopController();
@@ -56,18 +54,23 @@ public class ShooterOutSubsystem extends SubsystemBase {
       .i(0)
       .d(0)
       .outputRange(ShooterConstants.kMotorOutMinOutRange, ShooterConstants.kMotorOutMaxOutRange)
-      .p(0.0001, ClosedLoopSlot.kSlot1)
+      .p(0.00008, ClosedLoopSlot.kSlot1)
       .i(0,ClosedLoopSlot.kSlot1)
       .d(0,ClosedLoopSlot.kSlot1)
       .outputRange(ShooterConstants.kMotorOutMinOutRange, ShooterConstants.kMotorOutMaxOutRange, ClosedLoopSlot.kSlot1)
       .feedForward
         .kV(12.0/5767,ClosedLoopSlot.kSlot1);
     
-    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    motorConfig.closedLoopRampRate(0.75);
 
+    //motorConfig.smartCurrentLimit(40);
+    //motorConfig.secondaryCurrentLimit(60);
+
+    motor.configure(motorConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+  
     SmartDashboard.setDefaultNumber("Shooter Out Target Velocity", 0);
-    SmartDashboard.setDefaultBoolean("Shooter Out Reset Encoder", false);
   }
+
   /**
    * Example command factory method.
    *
@@ -86,14 +89,20 @@ public class ShooterOutSubsystem extends SubsystemBase {
     return runOnce(() -> setmotorTargetVelocity(0));
   }
 
-  public Command Forward() {
-    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForward));
+  public Command ForwardLow() {
+    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForwardLow));
   }
   
+  public Command ForwardHigh() {
+    return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutForwardHigh));
+  }
   public Command Reversed() {
     return runOnce(() -> setmotorTargetVelocity(ShooterConstants.kOutReversed));
   }
   
+  public double getMotorTargetVelcoity() {
+    return this.motorTargetVelocity;
+  }
   public void setmotorTargetVelocity(double motorTargetVelocity) {
     this.motorTargetVelocity=motorTargetVelocity;
   }
@@ -130,8 +139,4 @@ public class ShooterOutSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Shooter Out DutyCycle", motor.getAppliedOutput());
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
 }
