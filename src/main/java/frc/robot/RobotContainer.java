@@ -110,7 +110,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("JostleArmUp",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                               NamedCommands.getCommand("EnableArmMotor"),
                                                                               NamedCommands.getCommand("ArmMid"), 
-                                                                              new WaitCommand(2),
+                                                                              new WaitCommand(0.5),
                                                                               NamedCommands.getCommand("IntakeHalt")));
 
     NamedCommands.registerCommand("JostleArmDown",new SequentialCommandGroup(NamedCommands.getCommand("IntakeHalt"),
@@ -119,8 +119,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("RaiseArm",new SequentialCommandGroup(NamedCommands.getCommand("IntakeInSlow"),
                                                                              NamedCommands.getCommand("EnableArmMotor"),
                                                                              NamedCommands.getCommand("ArmUp"), 
-                                                                             new WaitCommand(1.5),
+                                                                             new WaitCommand(0.5),
                                                                              NamedCommands.getCommand("IntakeHalt"),
+                                                                             new WaitCommand(0.5),
                                                                              NamedCommands.getCommand("DisableArmMotor")));
                                                                                                          
     NamedCommands.registerCommand("StartShooter",new SequentialCommandGroup(NamedCommands.getCommand("ShooterOutForward"), 
@@ -236,9 +237,8 @@ public class RobotContainer {
     manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArm"));
 
     //manipulatorCommandXboxController.rightTrigger().onTrue(NamedCommands.getCommand("ShooterToggleCommand"));
-    manipulatorCommandXboxController.rightBumper().onTrue(new ConditionalCommand(NamedCommands.getCommand("JostleArmUp"), 
-                                                                      NamedCommands.getCommand("JostleArmDown"), 
-                                                                      armSubsystem::isArmDown));
+    manipulatorCommandXboxController.rightBumper().onTrue(NamedCommands.getCommand("JostleArmUp"));
+    manipulatorCommandXboxController.leftBumper().onTrue(NamedCommands.getCommand("JostleArmDown"));
 
   }
 
